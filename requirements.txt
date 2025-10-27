@@ -1,0 +1,12 @@
+# PokeReport Launcher - Dependencias
+
+# Obligatorias
+minecraft-launcher-lib>=7.0
+customtkinter>=5.2.0
+Pillow>=10.0.0
+requests>=2.31.0
+cryptography>=41.0.0
+
+# Opcional (solo para Microsoft Login premium)
+# Si quieres login premium, instala con: pip install msal
+# msal>=1.25.0

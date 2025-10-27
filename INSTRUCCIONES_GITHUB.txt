@@ -1,0 +1,72 @@
+╔══════════════════════════════════════════════════════════════╗
+║      🚀 SUBIR A GITHUB - GUÍA PASO A PASO 🚀              ║
+╚══════════════════════════════════════════════════════════════╝
+
+NECESITO DE TI:
+════════════════════════════════════════════════════════════════
+
+1. ¿TIENES CUENTA DE GITHUB?
+   
+   SÍ → Dime tu usuario de GitHub
+   NO → Te ayudo a crear una ahora
+
+2. ¿CÓMO CREARLA? (Si no tienes)
+   
+   • Ve a: https://github.com/signup
+   • Ingresa email
+   • Crea contraseña
+   • Elige username (ej: alejandroreport)
+   • Verifica email
+   • ¡Listo!
+
+════════════════════════════════════════════════════════════════
+
+📝 UNA VEZ TENGAS TU USUARIO:
+════════════════════════════════════════════════════════════════
+
+DIME:
+  • Tu usuario de GitHub: _____________
+  • Nombre del repo: pokereport-launcher (o el que quieras)
+
+Y YO:
+  ✅ Configuraré todo
+  ✅ Crearé los scripts necesarios
+  ✅ Te guiaré paso a paso
+
+════════════════════════════════════════════════════════════════
+
+🎯 LO QUE HAREMOS JUNTOS:
+════════════════════════════════════════════════════════════════
+
+PASO 1: Configurar Git
+  → Ejecutarás: setup_git.bat
+  → Ingresas tu nombre y email
+
+PASO 2: Crear repo en GitHub
+  → Te daré el link exacto
+  → Solo 3 clicks
+
+PASO 3: Subir archivos
+  → Ejecutarás: subir_a_github.bat
+  → Todo se sube automáticamente
+
+PASO 4: Crear Release
+  → Te guiaré en GitHub
+  → Subes el .exe
+  → ¡Listo para compartir!
+
+════════════════════════════════════════════════════════════════
+
+💡 ES SÚPER FÁCIL:
+════════════════════════════════════════════════════════════════
+
+Total: 10-15 minutos
+Clicks: ~10 clicks
+Comandos: 2 scripts automáticos
+
+¡YO TE GUÍO EN TODO! 🎯
+
+════════════════════════════════════════════════════════════════
+
+DIME TU USUARIO DE GITHUB Y EMPEZAMOS 🚀
+
