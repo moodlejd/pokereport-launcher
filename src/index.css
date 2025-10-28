@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+/* Fuente Minecraft (pixel) - Comentado temporalmente hasta agregar el archivo */
+/* @font-face {
+  font-family: 'Minecraftia';
+  src: url('./assets/fonts/Minecraftia-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  background: #0f0f1e;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(26, 26, 46, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #4bb4e9 0%, #2196f3 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2196f3 0%, #1976d2 100%);
+}
+
+/* Animaciones globales */
+.glow-effect {
+  filter: drop-shadow(0 0 10px rgba(75, 180, 233, 0.6));
+}
+
+.pixel-text {
+  font-family: 'Minecraftia', monospace;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Efectos de hover en botones */
+.btn-primary {
+  @apply bg-pokemon-blue text-white font-bold py-3 px-8 rounded-lg 
+         transition-all duration-300 hover:scale-105 hover:shadow-lg
+         hover:shadow-pokemon-blue/50 active:scale-95;
+}
+
+.btn-secondary {
+  @apply bg-pokemon-yellow text-pokemon-dark font-bold py-3 px-8 rounded-lg 
+         transition-all duration-300 hover:scale-105 hover:shadow-lg
+         hover:shadow-pokemon-yellow/50 active:scale-95;
+}
+
+/* Contenedor de vidrio */
+.glass {
+  background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(75, 180, 233, 0.2);
+}
+
+/* Animación de loading */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  border: 3px solid rgba(75, 180, 233, 0.3);
+  border-top-color: #4bb4e9;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Partículas de fondo */
+.particles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+

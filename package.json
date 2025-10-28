@@ -1,0 +1,105 @@
+{
+  "name": "pokereport-launcher",
+  "version": "1.0.0",
+  "description": "Launcher profesional para PokeReport Minecraft con React, Electron y Three.js",
+  "main": "app/main.js",
+  "author": "PokeReport Team",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"npm run start:react\" \"wait-on http://localhost:3000 && npm run start:electron\"",
+    "start:react": "react-scripts start",
+    "start:electron": "electron .",
+    "build": "react-scripts build && node scripts/prepare-build.js",
+    "build:electron": "electron-builder",
+    "package": "npm run build && npm run build:electron",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^4.25.1",
+    "@azure/msal-node": "^3.8.0",
+    "@react-three/drei": "^9.92.0",
+    "@react-three/fiber": "^8.15.12",
+    "axios": "^1.6.2",
+    "discord-rpc": "^4.0.1",
+    "electron-updater": "^6.1.7",
+    "framer-motion": "^10.16.16",
+    "minecraft-launcher-core": "^3.18.2",
+    "minecraft-server-util": "^5.4.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.20.0",
+    "skinview3d": "^3.4.1",
+    "three": "^0.159.0",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "http-proxy-middleware": "^3.0.5",
+    "postcss": "^8.4.32",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "^3.3.6",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.pokereport.launcher",
+    "productName": "PokeReport Launcher",
+    "files": [
+      "build/**/*",
+      "app/**/*",
+      "!app/node_modules"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules",
+        "to": "node_modules",
+        "filter": ["**/*"]
+      }
+    ],
+    "compression": "normal",
+    "asar": false,
+    "win": {
+      "target": ["nsis"],
+      "publisherName": "PokeReport Team",
+      "sign": null,
+      "verifyUpdateCodeSignature": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "electronDownload": {
+      "cache": "./cache"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "src/assets/icons/icon.icns",
+      "category": "public.app-category.games"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "src/assets/icons/icon.png",
+      "category": "Game"
+    }
+  },
+  "homepage": "./",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

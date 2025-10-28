@@ -1,241 +1,223 @@
-# 🎮 PokeReport Launcher - Professional Edition
+# 🎮 PokeReport Launcher - Edición Profesional
 
-Launcher profesional para Minecraft PokeReport con instalación **100% automática** y **UI espectacular**.
+Launcher moderno y profesional para el servidor de Minecraft PokeReport, construido con **React**, **Electron** y **Three.js**.
 
-## ✨ Características
-
-- 🎨 **UI Profesional**: Interfaz hermosa estilo TLauncher con fondo épico
-- 📰 **Panel de Noticias**: Actualizaciones y noticias en tiempo real
-- 🔐 **Dual Login**: Microsoft (premium) + Offline (gratis)
-- 📦 **Instalación automática**: Descarga TODO desde GitHub
-- 💾 **Sistema de sesiones**: Login una vez, auto-login siempre
-- 🧩 **Fabric 1.21.1**: Pre-instalado
-- 📁 **Directorio aislado**: No interfiere con otros launchers
-- ⚡ **Setup automático**: 0 configuración manual
-- 🎭 **Efectos visuales**: Transparencias, bordes de colores, diseño moderno
-
-## ⚡ Instalación
-
-### Requisitos
-
-- Python 3.8+
-- Java 17+ (automáticamente detectado)
-- 8 GB RAM recomendado
-
-### Instalar Dependencias
-
-```bash
-pip install minecraft-launcher-lib customtkinter Pillow requests cryptography
-```
-
-**Para login Microsoft** (opcional):
-```bash
-pip install msal
-```
-
-## 🚀 Uso
-
-### Primera Vez
-
-```bash
-# Ejecuta:
-iniciar.bat
-
-# O:
-python pokereport_launcher.py
-```
-
-**El launcher AUTOMÁTICAMENTE**:
-1. ✅ Descarga estructura base de Minecraft (versions, libraries, assets, config)
-2. ✅ Descarga modpack (mods, datapacks, resourcepacks, shaderpacks)
-3. ✅ Extrae e instala todo
-4. ✅ Detecta Fabric
-5. ✅ ¡Listo para jugar!
-
-**Tiempo**: 10-15 minutos (primera vez)
-
-### Pantalla de Login
-
-Elige tu modo:
-
-**👑 Cuenta Premium** (Microsoft):
-- Skin oficial
-- Servidores oficiales
-- Multijugador completo
-- Requiere Minecraft comprado
-
-**🎮 Modo Offline**:
-- Sin cuenta necesaria
-- Acceso inmediato
-- Todo el modpack funciona
-- Gratis
-
-### Siguientes Veces
-
-```bash
-iniciar.bat
-```
-
-**Auto-login automático** ✅
-- Recuerda tu sesión
-- Directo a jugar
-- Sin autenticar de nuevo
-
-## 🎨 Interfaz Profesional Nueva
-
-### Pantalla de Login
-- 🖼️ **Fondo épico** con imagen de Minecraft (árboles de cerezo)
-- 🎯 **Cards modernas** para Premium y Offline
-- 💎 **Bordes de colores** temáticos (dorado/verde)
-- ✨ **Logo profesional** estilo AAA
-- 📊 **Footer informativo** con características
-
-### Pantalla Principal
-- 📰 **Panel lateral de noticias** (estilo TLauncher)
-- 👤 **Perfil de usuario** con badge de tipo de cuenta
-- ✅ **Estado de instalación** con información técnica
-- ⚙️ **Configuración visual** de RAM
-- 🎮 **Botón JUGAR gigante** y llamativo
-- 📱 **Layout de 2 columnas** profesional
-
-### Pantalla de Instalación
-- 🔄 **Barra de progreso moderna** con efectos
-- 📊 **Panel de detalles técnicos** en tiempo real
-- ⚡ **Velocidad de descarga** mostrada
-- 💡 **Consejos útiles** durante instalación
-
-### Efectos Visuales
-- ✨ Transparencias en containers
-- 🎨 Desenfoque suave en fondo
-- 🔲 Bordes de colores temáticos
-- 📐 Esquinas redondeadas modernas
-- 🎭 Hover effects en botones
-
-## 📦 Archivos Descargados
-
-El launcher descarga desde GitHub Releases:
-
-1. **minecraft.zip** (~1-2 GB):
-   - Minecraft 1.21.1
-   - Fabric loader
-   - Libraries
-   - Assets
-   - Configs base
-
-2. **pokereport-modpack.mrpack** (~500 MB):
-   - 60+ mods
-   - Datapacks
-   - Resource packs
-   - Shader packs
-
-**Total descarga**: ~1.5-2.5 GB
-
-## 📁 Directorio de Instalación
-
-```
-C:\Users\[USER]\AppData\Roaming\.pokereport\
-├── versions/      # Minecraft + Fabric
-├── libraries/     # Librerías
-├── assets/        # Assets del juego
-├── mods/          # 60+ mods instalados
-├── config/        # Configuraciones
-├── resourcepacks/ # Texture packs
-├── shaderpacks/   # Shaders
-└── .session       # Sesión guardada (encriptada)
-```
-
-## 🔐 Sistema de Sesiones
-
-- ✅ **Primera vez**: Autentícate una sola vez
-- ✅ **Siguientes veces**: Auto-login automático
-- 💾 **Sesión encriptada**: AES encryption
-- 🔄 **Botón logout**: Cambiar de cuenta cuando quieras
-
-## 🏗️ Arquitectura
-
-```
-pokereport_launcher.py (765 líneas)
-  ├── Dual authentication (Microsoft + Offline)
-  ├── Auto-download system
-  ├── Session management
-  └── UI profesional
-
-auth_microsoft.py (200 líneas)
-  └── Microsoft OAuth 2.0
-
-session_manager.py (120 líneas)
-  └── Session cache con encriptación
-```
-
-**Total: ~1,085 líneas** - Profesional pero simple ✅
-
-## 🎨 Personalización de la UI
-
-### Cambiar Noticias
-
-Edita el array `NOTICIAS` en `pokereport_launcher.py` (líneas 43-64):
-
-```python
-NOTICIAS = [
-    {
-        "titulo": "🎉 Tu título aquí",
-        "descripcion": "Descripción de la noticia o actualización",
-        "fecha": "27 Oct 2025"
-    },
-    # Agrega más noticias...
-]
-```
-
-### Cambiar Fondo
-
-Reemplaza `background.jpg` con tu propia imagen:
-- Resolución recomendada: 1920x1080
-- Formato: JPG o PNG
-- El launcher la ajusta automáticamente
-
-### Cambiar Colores
-
-Busca y reemplaza estos códigos hexadecimales en `pokereport_launcher.py`:
-
-```python
-"#3b82f6"  # Azul primario
-"#10b981"  # Verde éxito
-"#fbbf24"  # Dorado premium
-"#ef4444"  # Rojo error
-```
-
-## ⚙️ Configuración Microsoft (Opcional)
-
-Para login premium:
-
-1. Registra app en: https://portal.azure.com/
-2. Configura Client ID en `auth_microsoft.py` línea 21
-3. `pip install msal`
-
-**Sin configurar**: Modo offline funciona perfecto ✅
-
-## 🆘 Solución de Problemas
-
-### Descarga lenta
-- Normal en primera instalación (1.5-2.5 GB)
-- Verifica conexión a internet
-
-### Minecraft crashea
-- Aumenta RAM a 8 GB
-- Actualiza drivers gráficos
-
-### Microsoft no funciona
-- Usa modo Offline (funciona igual)
-- O configura Azure (ver README)
-
-## 📝 Licencia
-
-MIT License
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Minecraft](https://img.shields.io/badge/minecraft-1.21.1-green)
+![License](https://img.shields.io/badge/license-MIT-yellow)
 
 ---
 
-**¡Disfruta PokeReport con instalación automática y UI profesional!** 🎮✨
+## ✨ Características
 
-**Versión: 3.2.0 Professional Edition**  
-**UI Renovada**: 27 Octubre 2025  
-**Características**: Fondo épico • Panel de noticias • Diseño moderno
+- 🎨 **UI Profesional** - Interfaz hermosa inspirada en Pokémon y Minecraft
+- 👤 **Render 3D** - Visualización 3D de tu skin con skinview3d
+- 🔐 **Dual Login** - Soporte para cuentas Premium (Microsoft) y Offline
+- 🎨 **Sistema de Skins** - Compatible con TLauncher y Mojang/Microsoft
+- 📰 **Panel de Noticias** - Noticias en tiempo real con modal expandible
+- ⚙️ **Configuración Avanzada** - RAM, Discord RPC
+- 🔍 **Buscador de Skins** - Valida skins de cualquier usuario
+- 💬 **Discord Rich Presence** - Muestra tu actividad en Discord
+- 🔄 **Auto-actualización** - Sistema integrado de actualizaciones
+- ✨ **Animaciones** - Transiciones suaves con Framer Motion
+
+---
+
+## 🚀 Inicio Rápido
+
+### Requisitos
+- Node.js 18+ 
+- npm
+- Git
+
+### Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/moodlejd/pokereport-launcher.git
+cd pokereport-launcher
+
+# Instalar dependencias
+npm install
+
+# Iniciar en desarrollo
+npm start
+```
+
+El launcher se abrirá automáticamente en Electron + navegador.
+
+---
+
+## 🎯 Uso
+
+### Login
+- **🎮 Modo Offline**: Ingresa tu username y juega inmediatamente
+- **👑 Cuenta Premium**: Inicia sesión con Microsoft (requiere Minecraft comprado)
+
+### Visor 3D
+- Renderiza tu personaje en 3D con tu skin
+- Busca skins de cualquier usuario (Premium/Offline toggle)
+- Limpia caché con el botón 🗑️
+
+### Panel de Noticias
+- Click en cualquier noticia para ver detalles
+- Auto-actualización cada 5 minutos
+- Links a Discord integrados
+
+### Configuración
+- Ajusta RAM asignada (2-16 GB)
+- Activa/desactiva Discord RPC
+- Selecciona directorio personalizado de Minecraft
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+pokereport-launcher/
+├── app/                    # Electron (main process)
+│   ├── main.js            # Proceso principal
+│   └── preload.js         # Preload script
+├── src/                    # React app
+│   ├── components/        # Componentes UI
+│   ├── pages/             # Páginas
+│   ├── store/             # Estado global (Zustand)
+│   ├── utils/             # Utilidades
+│   └── hooks/             # Custom hooks
+├── public/                 # Assets públicos
+├── scripts/                # Scripts de build
+├── package.json
+└── README.md
+```
+
+---
+
+## 🔧 Desarrollo
+
+```bash
+# Desarrollo (React + Electron)
+npm start
+
+# Solo React
+npm run start:react
+
+# Solo Electron
+npm run start:electron
+
+# Build de producción
+npm run build
+
+# Crear ejecutable
+npm run build:electron
+```
+
+---
+
+## 🎨 APIs de Skins Configuradas
+
+### Para usuarios Offline (TLauncher):
+- **TLauncher Direct**: `tlauncher.org/catalog/nickname/download/`
+- **TLauncher ElyBy API**: `auth.tlauncher.org/skin/profile/texture/login/`
+- **LittleSkin**: `littleskin.cn/csl/`
+- **Minotar, MC-Heads, Visage** (fallbacks)
+
+### Para usuarios Premium:
+- **Crafatar**: Skins oficiales de Mojang por UUID
+- **MC-Heads**: Alternativa confiable
+- **Mojang API**: Fuente oficial directa
+
+---
+
+## 🔐 Microsoft OAuth
+
+### Configuración:
+1. Registrar app en [Azure Portal](https://portal.azure.com)
+2. Client ID ya configurado: `15d53ab4-cfad-4757-88a2-904139d4ca9d`
+3. Permisos: `XboxLive.signin`
+4. ⚠️ **Nota**: Funciona en .exe, en desarrollo puede tener CORS
+
+Ver `INSTALL.md` para guía completa.
+
+---
+
+## 💬 Discord Rich Presence
+
+Para habilitar:
+1. Crear app en [Discord Developers](https://discord.com/developers/applications)
+2. Copiar Application ID
+3. Actualizar `src/utils/discordRPC.js` línea 9
+4. Activar en Configuración del launcher
+
+---
+
+## 🐛 Solución de Problemas
+
+### El launcher no inicia
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm start
+```
+
+### Skins no cargan
+- Para offline: Verificar username existe en TLauncher
+- Para premium: Verificar autenticación Microsoft
+- Limpiar caché con botón 🗑️ en el visor
+
+### CORS errors en desarrollo
+- Normal en modo desarrollo
+- Se resuelve automáticamente en producción (.exe)
+- Proxy configurado en `src/setupProxy.js`
+
+---
+
+## 📦 Distribución
+
+### Crear ejecutable:
+```bash
+npm run build
+npm run build:electron
+```
+
+**Resultado**: `dist/PokeReport Launcher Setup 1.0.0.exe`
+
+⚠️ **Nota actual**: El .exe tiene problemas de compilación (trabajo en progreso).  
+✅ **Recomendado**: Usar `npm start` para desarrollo por ahora.
+
+---
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crea tu rama (`git checkout -b feature/AmazingFeature`)
+3. Commit (`git commit -m 'Add AmazingFeature'`)
+4. Push (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+---
+
+## 📝 Licencia
+
+MIT License - Ver [LICENSE](LICENSE)
+
+---
+
+## 🎮 Créditos
+
+- **Servidor**: PokeReport - 199.127.60.252:25569
+- **Minecraft**: 1.21.1 Fabric + 120 mods
+- **Desarrollado con**: React, Electron, Three.js, skinview3d
+- **Comunidad**: PokeReport Team
+
+---
+
+## 📞 Contacto
+
+- Discord: [discord.gg/pokereport](https://discord.gg/pokereport)
+- GitHub: [@moodlejd](https://github.com/moodlejd)
+
+---
+
+**🎉 ¡Atrapa, entrena y juega! ⚡**
+
+*Launcher profesional nivel AAA para la mejor experiencia de PokeReport*
