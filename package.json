@@ -2,7 +2,7 @@
   "name": "pokereport-launcher",
   "version": "1.0.0",
   "description": "Launcher profesional para PokeReport Minecraft con React, Electron y Three.js",
-  "main": "app/main.js",
+  "main": "electron-main.js",
   "author": "PokeReport Team",
   "license": "MIT",
   "scripts": {
@@ -50,15 +50,8 @@
     "productName": "PokeReport Launcher",
     "files": [
       "build/**/*",
-      "app/**/*",
-      "!app/node_modules"
-    ],
-    "extraResources": [
-      {
-        "from": "node_modules",
-        "to": "node_modules",
-        "filter": ["**/*"]
-      }
+      "electron-main.js",
+      "app/preload.js"
     ],
     "compression": "normal",
     "asar": false,

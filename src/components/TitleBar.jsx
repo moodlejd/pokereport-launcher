@@ -21,7 +21,7 @@ const TitleBar = () => {
   };
 
   return (
-    <div className="h-8 bg-pokemon-darker border-b border-pokemon-blue/30 flex items-center justify-between px-4 drag-region select-none">
+    <div className="h-8 bg-pokemon-darker border-b border-pokemon-blue/30 flex items-center justify-between px-4 drag-region select-none relative z-50">
       {/* Logo y título */}
       <div className="flex items-center gap-2">
         <div className="w-5 h-5 bg-gradient-to-br from-pokemon-yellow to-pokemon-red rounded-full" />
