@@ -23,25 +23,30 @@ Launcher moderno y profesional para el servidor de Minecraft PokeReport, constru
 
 ---
 
-## 🚀 Inicio Rápido
+## 🚀 Instalación (SÚPER FÁCIL)
 
-### **Método 1: Instalador Automático** (Recomendado) ⭐
+### **Descarga el Instalador Automático** ⭐ UN SOLO ARCHIVO
 
-1. Descarga el proyecto (ZIP o git clone)
-2. Ejecuta: **`INSTALAR_LAUNCHER.bat`**
-3. Sigue las instrucciones
-4. ¡Listo! Se crea acceso directo en escritorio
+1. **Descarga**: [`PokeReport-Launcher-Installer.bat`](https://github.com/moodlejd/pokereport-launcher/raw/main/PokeReport-Launcher-Installer.bat)
+2. **Ejecuta** el archivo
+3. El instalador hace TODO automáticamente:
+   - ✅ Descarga el launcher desde GitHub
+   - ✅ Instala Node.js (si no lo tienes)
+   - ✅ Instala Git (si no lo tienes)
+   - ✅ Instala dependencias
+   - ✅ Crea acceso directo en escritorio
+   - ✅ ¡Listo para jugar!
+
+**Tiempo:** 5-10 minutos (solo primera vez)
 
 **Siguientes veces:**
-- Doble click en: **`PokeReport Launcher`** (escritorio)
+- Doble click en: **`PokeReport Launcher`** (escritorio) ⚡
 
 ---
 
-### **Método 2: Manual**
+### **O Instalación Manual:**
 
 ```bash
-# Instalar Node.js desde: https://nodejs.org
-
 # Clonar repositorio
 git clone https://github.com/moodlejd/pokereport-launcher.git
 cd pokereport-launcher

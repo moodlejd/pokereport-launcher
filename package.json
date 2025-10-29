@@ -54,14 +54,18 @@
     "appId": "com.pokereport.launcher",
     "productName": "PokeReport Launcher",
     "files": [
-      "dist-react/**/*",
-      "electron/**/*",
+      "dist/**/*",
+      "dist-electron/**/*",
       "public/**/*"
     ],
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "public"
     },
-    "asar": true,
+    "asar": false,
+    "extraMetadata": {
+      "main": "dist-electron/main.js"
+    },
     "win": {
       "target": "nsis",
       "publisherName": "PokeReport Team"

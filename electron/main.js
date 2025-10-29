@@ -28,16 +28,8 @@ function createSplash() {
   });
 
   const splashUrl = isDev
-    ? url.format({
-        pathname: path.join(__dirname, '../public/splash.html'),
-        protocol: 'file:',
-        slashes: true
-      })
-    : url.format({
-        pathname: path.join(__dirname, '../splash.html'),
-        protocol: 'file:',
-        slashes: true
-      });
+    ? `file://${path.join(__dirname, '../public/splash.html')}`
+    : `file://${path.join(__dirname, '../public/splash.html')}`;
 
   splashWindow.loadURL(splashUrl);
 }
@@ -52,7 +44,7 @@ function createWindow() {
     backgroundColor: '#1a1a2e',
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, isDev ? 'preload.js' : '../preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
@@ -61,18 +53,12 @@ function createWindow() {
     }
   });
 
-  // Cargar la app (Vite)
+  // Cargar la app
   const appUrl = isDev
-    ? 'http://localhost:5173' // Vite usa puerto 5173 por defecto
-    : url.format({
-        pathname: path.join(__dirname, '../index.html'),
-        protocol: 'file:',
-        slashes: true
-      });
+    ? 'http://localhost:5173'
+    : `file://${path.join(__dirname, '../dist/index.html')}`;
 
   console.log('[Electron] Loading:', appUrl);
-  console.log('[Electron] isDev:', isDev);
-
   mainWindow.loadURL(appUrl);
 
   mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {

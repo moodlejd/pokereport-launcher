@@ -9,23 +9,36 @@ export default defineConfig({
     react(),
     electron([
       {
-        // Main process
         entry: 'electron/main.js',
+        vite: {
+          build: {
+            outDir: 'dist-electron'
+          }
+        }
       },
       {
-        // Preload script
         entry: 'electron/preload.js',
         onstart(options) {
           options.reload();
         },
-      },
+        vite: {
+          build: {
+            outDir: 'dist-electron'
+          }
+        }
+      }
     ]),
-    renderer(),
+    renderer()
   ],
   base: './',
   build: {
-    outDir: 'dist-react',
+    outDir: 'dist',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   },
   server: {
     port: 5173,

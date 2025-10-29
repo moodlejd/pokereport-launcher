@@ -1,0 +1,40 @@
+{
+  "name": "pokereport-launcher",
+  "version": "1.0.0",
+  "description": "Launcher profesional para PokeReport Minecraft con React, Electron y Three.js",
+  "main": "dist-electron/main.js",
+  "author": "PokeReport Team",
+  "license": "MIT",
+  "dependencies": {
+    "@azure/msal-browser": "^4.25.1",
+    "@azure/msal-node": "^3.8.0",
+    "@react-three/drei": "^9.92.0",
+    "@react-three/fiber": "^8.15.12",
+    "axios": "^1.6.2",
+    "discord-rpc": "^4.0.1",
+    "electron-updater": "^6.1.7",
+    "framer-motion": "^10.16.16",
+    "minecraft-launcher-core": "^3.18.2",
+    "minecraft-server-util": "^5.4.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.20.0",
+    "skinview3d": "^3.4.1",
+    "three": "^0.159.0",
+    "zustand": "^4.4.7"
+  },
+  "homepage": "./",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
