@@ -100,7 +100,7 @@ const Launcher = () => {
             className="text-center mb-8"
           >
             <img 
-              src={`${process.env.PUBLIC_URL}/pokeball-icon.png`}
+              src="/pokeball-icon.png"
               alt="Loading"
               className="w-32 h-32 mx-auto mb-4 drop-shadow-2xl"
               style={{ 

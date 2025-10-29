@@ -50,7 +50,7 @@ const LoadingScreen = ({ onComplete }) => {
       transition={{ duration: 0.5 }}
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{
-        backgroundImage: `url(${process.env.PUBLIC_URL}/background.png)`,
+        backgroundImage: `url(/background.png)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
@@ -81,8 +81,8 @@ const LoadingScreen = ({ onComplete }) => {
           }}
           className="mb-12"
         >
-          <img 
-            src={`${process.env.PUBLIC_URL}/pokeball-icon.png`}
+            <img 
+              src="/pokeball-icon.png"
             alt="Loading"
             className="w-40 h-40 drop-shadow-2xl"
             style={{ 

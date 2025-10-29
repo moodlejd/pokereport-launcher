@@ -62,7 +62,7 @@ const NewsPanel = React.memo(() => {
       description: 'Nueva versión del launcher con render 3D de personajes, sistema de skins para Premium y Offline, descarga automática de mods y más funcionalidades profesionales.',
       date: '28 Oct 2025',
       icon: '🎮',
-      image: `${process.env.PUBLIC_URL}/background.png`,
+      image: '/background.png',
       link: 'https://discord.gg/pokereport',
       fullContent: 'El nuevo launcher de PokeReport trae una experiencia completamente renovada con tecnologías modernas como React, Electron y Three.js. Disfruta de un visor 3D de tu personaje, sistema de skins compatible con TLauncher y Mojang, y una interfaz hermosa inspirada en Pokémon.'
     },
@@ -71,7 +71,7 @@ const NewsPanel = React.memo(() => {
       description: 'Visualiza tu personaje en 3D con rotación automática. Compatible con skins de TLauncher y cuentas premium de Mojang.',
       date: '28 Oct 2025',
       icon: '👤',
-      image: `${process.env.PUBLIC_URL}/backgroundseleccioncuenta.png`,
+      image: '/backgroundseleccioncuenta.png',
       fullContent: 'El visor 3D utiliza skinview3d para renderizar tu personaje de Minecraft con tu skin personalizada. Funciona con usuarios offline de TLauncher y con cuentas premium de Mojang/Microsoft.'
     },
     {
@@ -79,7 +79,7 @@ const NewsPanel = React.memo(() => {
       description: 'Compatibilidad total con la última versión de Minecraft y más de 60 mods optimizados.',
       date: '27 Oct 2025',
       icon: '⚡',
-      image: `${process.env.PUBLIC_URL}/fondo2.png`,
+      image: '/fondo2.png',
       fullContent: 'Fabric 1.21.1 trae mejor rendimiento, compatibilidad con todos los mods del modpack PokeReport, y optimizaciones para jugar sin lag.'
     },
     {
@@ -132,7 +132,7 @@ const NewsPanel = React.memo(() => {
         className="flex items-center gap-3 mb-4"
       >
         <motion.img
-          src={`${process.env.PUBLIC_URL}/pokeball-icon.png`}
+          src="/pokeball-icon.png"
           alt="News"
           className="w-10 h-10"
           animate={{ rotate: 360 }}

@@ -42,6 +42,7 @@ const ServerPlayers = () => {
 const Home = () => {
   const navigate = useNavigate();
   const { user, isPremium, logout, config } = useStore();
+  const [skinKey, setSkinKey] = React.useState(0);
 
   const handleLaunch = () => {
     navigate('/launcher');
@@ -58,6 +59,10 @@ const Home = () => {
     }
   };
 
+  const handleRefreshSkin = () => {
+    setSkinKey(prev => prev + 1);
+  };
+
   return (
     <div className="w-full h-full p-6 overflow-hidden relative z-10">
       <div className="h-full flex flex-col">
@@ -69,7 +74,7 @@ const Home = () => {
         >
           <div className="flex items-center gap-4">
             <img 
-              src={`${process.env.PUBLIC_URL}/pokeball-icon.png`}
+              src="/pokeball-icon.png"
               alt="Pokeball"
               className="w-12 h-12 drop-shadow-lg"
               style={{ filter: 'drop-shadow(0 0 10px rgba(211, 47, 47, 0.6))' }}
@@ -85,6 +90,13 @@ const Home = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={handleRefreshSkin}
+              className="w-12 h-12 glass rounded-xl flex items-center justify-center hover:border-pokemon-yellow transition-all"
+              title="Recargar skin"
+            >
+              <span className="text-white text-xl">🔄</span>
+            </button>
             <button
               onClick={handleSettings}
               className="w-12 h-12 glass rounded-xl flex items-center justify-center hover:border-pokemon-blue transition-all"
@@ -113,11 +125,14 @@ const Home = () => {
           >
             {/* Visor 3D de skin */}
             <div className="h-[450px] mb-6">
-              <SkinViewer
-                username={user?.username}
-                uuid={user?.uuid}
-                isPremium={isPremium}
-              />
+              {user?.username && (
+                <SkinViewer
+                  key={`${user.username}-${skinKey}`}
+                  username={user.username}
+                  uuid={user.uuid}
+                  isPremium={isPremium}
+                />
+              )}
             </div>
 
             {/* Información del servidor */}

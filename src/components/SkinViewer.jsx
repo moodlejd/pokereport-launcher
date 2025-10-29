@@ -30,7 +30,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
             canvas: canvasRef.current,
             width: canvasRef.current.offsetWidth,
             height: canvasRef.current.offsetHeight,
-            skin: skinUrl || `${process.env.PUBLIC_URL}/steve.png`
+            skin: skinUrl || '/steve.png'
           });
 
           // Configuración del visor
@@ -118,7 +118,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
           
           // Fallback a Steve
           try {
-            await viewerRef.current.loadSkin(`${process.env.PUBLIC_URL}/steve.png`);
+            await viewerRef.current.loadSkin('/steve.png');
             console.log('✅ Steve cargado como fallback');
           } catch (steveError) {
             console.error('❌ No se pudo cargar ni Steve:', steveError);
@@ -150,23 +150,36 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
       }
     } catch (error) {
       console.error('❌ Error obteniendo skin:', error);
-      setSkinUrl(`${process.env.PUBLIC_URL}/steve.png`);
+      setSkinUrl('/steve.png');
     } finally {
       setIsLoadingSkin(false);
     }
   };
 
-  // Cargar skin inicial cuando se monta el componente
+  // Cargar skin inicial cuando se monta el componente o cambian los props
   useEffect(() => {
-    if (initialUsername && !skinUrl) {
+    console.log('🎨 Props recibidos:', { initialUsername, initialUuid, initialIsPremium });
+    
+    if (initialUsername) {
+      // Limpiar caché anterior
+      skinManager.clearCache();
+      
       console.log('🎨 Cargando skin inicial:', initialUsername);
-      loadSkin(initialUsername, initialUuid, initialIsPremium);
+      setCurrentUsername(initialUsername);
+      setCurrentUuid(initialUuid);
+      setCurrentIsPremium(initialIsPremium);
+      setSkinUrl(null); // Limpiar skin anterior
+      
+      // Cargar después de un pequeño delay
+      setTimeout(() => {
+        loadSkin(initialUsername, initialUuid, initialIsPremium);
+      }, 500);
     }
-  }, []);
+  }, [initialUsername, initialUuid, initialIsPremium]);
 
   // Cargar skin cuando cambia el username actual
   useEffect(() => {
-    if (currentUsername && currentUsername.trim() && currentUsername !== initialUsername) {
+    if (currentUsername && currentUsername.trim()) {
       // Delay para evitar múltiples peticiones rápidas
       const timer = setTimeout(() => {
         loadSkin(currentUsername, currentUuid, currentIsPremium);
@@ -175,6 +188,20 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
       return () => clearTimeout(timer);
     }
   }, [currentUsername, currentUuid, currentIsPremium]);
+
+  // Reintentar carga si no hay skin después de 3 segundos
+  useEffect(() => {
+    if (!skinUrl && currentUsername && !isLoadingSkin) {
+      console.log('⚠️ No hay skin, reintentando en 3 segundos...');
+      const retryTimer = setTimeout(() => {
+        console.log('🔄 Reintentando carga de skin...');
+        skinManager.clearCache();
+        loadSkin(currentUsername, currentUuid, currentIsPremium);
+      }, 3000);
+      
+      return () => clearTimeout(retryTimer);
+    }
+  }, [skinUrl, currentUsername, isLoadingSkin]);
 
   const handleSearch = (e) => {
     e.preventDefault();

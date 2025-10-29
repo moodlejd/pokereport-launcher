@@ -119,10 +119,10 @@ const BackgroundEffects = () => {
   // Determinar qué fondo mostrar según la ruta
   const getBackgroundImage = () => {
     if (location.pathname === '/login') {
-      return `url(${process.env.PUBLIC_URL}/backgroundseleccioncuenta.png)`;
+      return 'url(/backgroundseleccioncuenta.png)';
     }
     // Para Home, Launcher, Config usar fondo2.png
-    return `url(${process.env.PUBLIC_URL}/fondo2.png)`;
+    return 'url(/fondo2.png)';
   };
 
   return (

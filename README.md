@@ -25,14 +25,23 @@ Launcher moderno y profesional para el servidor de Minecraft PokeReport, constru
 
 ## 🚀 Inicio Rápido
 
-### Requisitos
-- Node.js 18+ 
-- npm
-- Git
+### **Método 1: Instalador Automático** (Recomendado) ⭐
 
-### Instalación
+1. Descarga el proyecto (ZIP o git clone)
+2. Ejecuta: **`INSTALAR_LAUNCHER.bat`**
+3. Sigue las instrucciones
+4. ¡Listo! Se crea acceso directo en escritorio
+
+**Siguientes veces:**
+- Doble click en: **`PokeReport Launcher`** (escritorio)
+
+---
+
+### **Método 2: Manual**
 
 ```bash
+# Instalar Node.js desde: https://nodejs.org
+
 # Clonar repositorio
 git clone https://github.com/moodlejd/pokereport-launcher.git
 cd pokereport-launcher
@@ -40,11 +49,9 @@ cd pokereport-launcher
 # Instalar dependencias
 npm install
 
-# Iniciar en desarrollo
+# Iniciar launcher
 npm start
 ```
-
-El launcher se abrirá automáticamente en Electron + navegador.
 
 ---
 

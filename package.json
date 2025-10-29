@@ -2,18 +2,16 @@
   "name": "pokereport-launcher",
   "version": "1.0.0",
   "description": "Launcher profesional para PokeReport Minecraft con React, Electron y Three.js",
-  "main": "electron-main.js",
+  "main": "electron/main.js",
   "author": "PokeReport Team",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"npm run start:react\" \"wait-on http://localhost:3000 && npm run start:electron\"",
-    "start:react": "react-scripts start",
-    "start:electron": "electron .",
-    "build": "react-scripts build && node scripts/prepare-build.js",
-    "build:electron": "electron-builder",
-    "package": "npm run build && npm run build:electron",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "vite",
+    "electron:build": "vite build && electron-builder",
+    "start": "vite"
   },
   "dependencies": {
     "@azure/msal-browser": "^4.25.1",
@@ -35,31 +33,38 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-squirrel": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@vitejs/plugin-react": "^5.1.0",
     "autoprefixer": "^10.4.16",
     "concurrently": "^8.2.2",
     "electron": "^28.0.0",
     "electron-builder": "^24.9.1",
+    "fs-extra": "^11.3.2",
     "http-proxy-middleware": "^3.0.5",
     "postcss": "^8.4.32",
-    "react-scripts": "5.0.1",
     "tailwindcss": "^3.3.6",
+    "vite": "^7.1.12",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
     "wait-on": "^7.2.0"
   },
   "build": {
     "appId": "com.pokereport.launcher",
     "productName": "PokeReport Launcher",
     "files": [
-      "build/**/*",
-      "electron-main.js",
-      "app/preload.js"
+      "dist-react/**/*",
+      "electron/**/*",
+      "public/**/*"
     ],
-    "compression": "normal",
-    "asar": false,
+    "directories": {
+      "output": "release"
+    },
+    "asar": true,
     "win": {
-      "target": ["nsis"],
-      "publisherName": "PokeReport Team",
-      "sign": null,
-      "verifyUpdateCodeSignature": false
+      "target": "nsis",
+      "publisherName": "PokeReport Team"
     },
     "nsis": {
       "oneClick": false,
@@ -72,12 +77,16 @@
       "cache": "./cache"
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "icon": "src/assets/icons/icon.icns",
       "category": "public.app-category.games"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "src/assets/icons/icon.png",
       "category": "Game"
     }
