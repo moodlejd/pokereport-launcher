@@ -614,17 +614,37 @@ class SimpleAPIHandler(SimpleHTTPRequestHandler):
                 self.send_error(404)
         else:
             # Servir archivos estáticos de React
-            if self.path == "/" or self.path == "/index.html":
-                self.path = "/index.html"
             
-            # Servir desde dist/
+            # Rutas de React Router - siempre servir index.html
+            react_routes = ["/", "/index.html", "/login", "/home", "/launcher", "/config"]
+            
+            if self.path in react_routes:
+                self.path = "/dist/index.html"
+                try:
+                    super().do_GET()
+                    return
+                except:
+                    self.send_error(404)
+                    return
+            
+            # Archivos estáticos (CSS, JS, imágenes)
+            if self.path.startswith("/assets/") or self.path.endswith(('.css', '.js', '.png', '.jpg', '.ico', '.html')):
+                try:
+                    self.path = "/dist" + self.path
+                    super().do_GET()
+                    return
+                except:
+                    # Si no existe el asset, servir index.html (para React Router)
+                    self.path = "/dist/index.html"
+                    super().do_GET()
+                    return
+            
+            # Cualquier otra ruta - servir index.html (React Router se encarga)
+            self.path = "/dist/index.html"
             try:
-                self.path = "/dist" + self.path
                 super().do_GET()
             except:
-                # Fallback a index.html para React Router
-                self.path = "/dist/index.html"
-                super().do_GET()
+                self.send_error(404)
     
     def do_POST(self):
         if self.path == "/api/launch-minecraft":
