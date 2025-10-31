@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
 import ProgressBar from '../components/ProgressBar';
-import { launchMinecraft } from '../utils/minecraftLauncher';
+import { launchMinecraft, startMinecraftGame } from '../utils/minecraftLauncher';
 
 const LAUNCH_MESSAGES = [
   '🎮 Invocando Pikachu...',
@@ -23,9 +23,23 @@ const Launcher = () => {
   const [progress, setProgress] = useState(0);
   const [speed, setSpeed] = useState(0);
   const [isLaunching, setIsLaunching] = useState(true);
+  const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState(null);
+  const [isGameStarting, setIsGameStarting] = useState(false);
+  const [hasGameStarted, setHasGameStarted] = useState(false);
+  const lastUpdateRef = useRef({ time: 0, percent: 0 });
+  const launchedRef = useRef(false); // Prevenir doble ejecución
 
   useEffect(() => {
+    // Prevenir ejecución múltiple
+    if (launchedRef.current) {
+      console.warn('[Launcher React] ⚠️ useEffect ya ejecutado, cancelando duplicado');
+      return;
+    }
+    
+    launchedRef.current = true;
+    console.log('[Launcher React] 🚀 Iniciando lanzamiento (primera vez)');
+    
     const launch = async () => {
       setDownloading(true);
       setIsLaunching(true);
@@ -34,33 +48,44 @@ const Launcher = () => {
         let messageIndex = 0;
         
         // Callback de progreso
-        const handleProgress = (progressData) => {
-          setProgress(progressData.percent || 0);
-          setDownloadProgress(progressData.percent || 0);
-          setSpeed(progressData.speed || 0);
-          
-          // Actualizar mensaje según el tipo
-          if (progressData.message) {
-            setCurrentMessage(progressData.message);
-          } else {
-            // Ciclar por los mensajes predeterminados
-            messageIndex = (messageIndex + 1) % LAUNCH_MESSAGES.length;
-            setCurrentMessage(LAUNCH_MESSAGES[messageIndex]);
+        const handleProgress = (progressData = {}) => {
+          const percent = Math.max(0, Math.min(100, progressData.percent ?? 0));
+          const now = Date.now();
+          const last = lastUpdateRef.current;
+          const shouldUpdate =
+            now - last.time > 120 ||
+            Math.abs(percent - last.percent) >= 1 ||
+            percent >= 99.5;
+
+          if (shouldUpdate) {
+            lastUpdateRef.current = { time: now, percent };
+            setProgress(percent);
+            setDownloadProgress(percent);
+
+            const bytesPerSecond = progressData.speed || 0;
+            const mbps = bytesPerSecond > 0 ? bytesPerSecond / (1024 * 1024) : 0;
+            setSpeed(mbps);
+
+            if (progressData.message) {
+              setCurrentMessage(progressData.message);
+              messageIndex = 0;
+            } else {
+              messageIndex = (messageIndex + 1) % LAUNCH_MESSAGES.length;
+              setCurrentMessage(LAUNCH_MESSAGES[messageIndex]);
+            }
           }
         };
 
-        // Lanzar Minecraft con progreso real
-        setCurrentMessage('🎮 Iniciando sistema de lanzamiento...');
+        // Preparar Minecraft (descargar e instalar)
+        setCurrentMessage('🎮 Preparando Minecraft...');
         
         await launchMinecraft(user, config, handleProgress);
         
         setProgress(100);
-        setCurrentMessage('✅ ¡Minecraft iniciado correctamente!');
-        
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Volver al home
-        navigate('/home');
+        setDownloadProgress(100);
+        setCurrentMessage('✅ ¡Todo listo para jugar!');
+        setIsReady(true);
+        setIsLaunching(false);
         
       } catch (err) {
         console.error('Error en lanzamiento:', err);
@@ -72,7 +97,12 @@ const Launcher = () => {
     };
 
     launch();
-  }, [user, config, navigate, setDownloadProgress, setDownloading, setStatus]);
+    
+    // Cleanup: resetear ref si el componente se desmonta
+    return () => {
+      launchedRef.current = false;
+    };
+  }, []); // Dependencias vacías - solo ejecutar UNA vez
 
   const handleCancel = () => {
     navigate('/home');
@@ -100,7 +130,7 @@ const Launcher = () => {
             className="text-center mb-8"
           >
             <img 
-              src="/pokeball-icon.png"
+              src="./pokeball-icon.png"
               alt="Loading"
               className="w-32 h-32 mx-auto mb-4 drop-shadow-2xl"
               style={{ 
@@ -167,8 +197,62 @@ const Launcher = () => {
             </motion.div>
           )}
 
-          {/* Botón cancelar */}
-          {!isLaunching && (
+          {/* Botones */}
+          {isReady ? (
+            <div className="space-y-3">
+              <motion.button
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={async () => {
+                  if (isGameStarting || hasGameStarted) return;
+                  // Lanzar Minecraft sin cerrar el launcher
+                  try {
+                    console.log('[React] 🚀 Lanzando Minecraft con datos:');
+                    console.log('[React]   - user:', JSON.stringify(user, null, 2));
+                    console.log('[React]   - config:', JSON.stringify(config, null, 2));
+                    
+                    setIsGameStarting(true);
+                    setCurrentMessage('🎮 Lanzando Minecraft...');
+                    setStatus('Lanzando Minecraft...');
+
+                    const result = await startMinecraftGame(user, config);
+                    
+                    console.log('[React] 📨 Respuesta recibida:', result);
+                    
+                    if (result.success) {
+                      console.log('✅ Minecraft iniciado, manteniendo launcher abierto.');
+                      setCurrentMessage('✅ Minecraft se está iniciando. Mantén este launcher abierto para monitorear.');
+                      setStatus('Minecraft ejecutándose');
+                      setHasGameStarted(true);
+                    } else {
+                      console.error('❌ Error al lanzar:', result.error);
+                      setCurrentMessage(`❌ Error al lanzar: ${result.error}`);
+                      setStatus(`Error: ${result.error}`);
+                    }
+                  } catch (error) {
+                    console.error('❌ Error al lanzar Minecraft:', error);
+                    setCurrentMessage(`❌ Error al lanzar: ${error.message}`);
+                    setStatus(`Error: ${error.message}`);
+                  }
+                  setIsGameStarting(false);
+                }}
+                className={`w-full py-5 bg-gradient-to-r from-pokemon-blue via-pokemon-yellow to-pokemon-blue bg-[length:200%_100%] animate-[gradient_3s_ease_infinite] text-white font-bold text-xl rounded-xl transition-all shadow-lg shadow-pokemon-blue/50 ${
+                  isGameStarting || hasGameStarted ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
+                disabled={isGameStarting || hasGameStarted}
+              >
+                {hasGameStarted ? '🎮 Minecraft en ejecución' : isGameStarting ? '⏳ Lanzando...' : '🎮 JUGAR MINECRAFT'}
+              </motion.button>
+              <button
+                onClick={handleCancel}
+                className="w-full py-3 bg-pokemon-darkest hover:bg-pokemon-darker text-gray-400 hover:text-white font-semibold rounded-xl transition-colors"
+              >
+                Volver al inicio
+              </button>
+            </div>
+          ) : !isLaunching && error && (
             <button
               onClick={handleCancel}
               className="w-full py-4 bg-pokemon-darkest hover:bg-pokemon-darker text-white font-bold rounded-xl transition-colors"

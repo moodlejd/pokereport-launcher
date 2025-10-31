@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { skinManager } from '../utils/skinAPI';
+import { getSkinUrl, clearSkinCache } from '../utils/skinAPIFixed';
 import { ToastContext } from '../App';
+import steveSkin from '@/assets/skins/steve.png';
 
 /**
  * Visor de skin 3D usando skinview3d (librería especializada)
@@ -30,7 +31,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
             canvas: canvasRef.current,
             width: canvasRef.current.offsetWidth,
             height: canvasRef.current.offsetHeight,
-            skin: skinUrl || '/steve.png'
+            skin: skinUrl || steveSkin
           });
 
           // Configuración del visor
@@ -118,7 +119,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
           
           // Fallback a Steve
           try {
-            await viewerRef.current.loadSkin('/steve.png');
+            await viewerRef.current.loadSkin(steveSkin);
             console.log('✅ Steve cargado como fallback');
           } catch (steveError) {
             console.error('❌ No se pudo cargar ni Steve:', steveError);
@@ -142,15 +143,18 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
     try {
       console.log('🎮 Cargando skin para:', { username, uuid, isPremium });
       
-      const url = await skinManager.getSkin(username, uuid, isPremium);
+      const url = await getSkinUrl(username, uuid, isPremium);
       
       if (url) {
         console.log('✅ URL de skin obtenida:', url);
         setSkinUrl(url);
+      } else {
+        console.log('⚠️ No hay skin, usando Steve por defecto');
+        setSkinUrl(steveSkin);
       }
     } catch (error) {
       console.error('❌ Error obteniendo skin:', error);
-      setSkinUrl('/steve.png');
+      setSkinUrl(steveSkin);
     } finally {
       setIsLoadingSkin(false);
     }
@@ -162,7 +166,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
     
     if (initialUsername) {
       // Limpiar caché anterior
-      skinManager.clearCache();
+      clearSkinCache();
       
       console.log('🎨 Cargando skin inicial:', initialUsername);
       setCurrentUsername(initialUsername);
@@ -195,7 +199,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
       console.log('⚠️ No hay skin, reintentando en 3 segundos...');
       const retryTimer = setTimeout(() => {
         console.log('🔄 Reintentando carga de skin...');
-        skinManager.clearCache();
+        clearSkinCache();
         loadSkin(currentUsername, currentUuid, currentIsPremium);
       }, 3000);
       
@@ -207,7 +211,7 @@ const SkinViewer = React.memo(({ username: initialUsername, uuid: initialUuid, i
     e.preventDefault();
     if (searchUsername.trim()) {
       // Limpiar caché de la skin anterior antes de buscar
-      skinManager.clearCache();
+      clearSkinCache();
       
       setCurrentUsername(searchUsername.trim());
       setCurrentUuid(null);

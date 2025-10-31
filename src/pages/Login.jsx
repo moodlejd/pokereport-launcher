@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
 import { ToastContext } from '../App';
-import microsoftAuth from '../utils/microsoftAuth';
+import microsoftAuth from '../utils/microsoftAuthDevice';
+import { getSkinUrl } from '../utils/skinAPIFixed';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,16 +25,31 @@ const Login = () => {
     setLoading(true);
     setError('');
 
-    // Simulamos validación
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      // Obtener skin de TLauncher o fallback a Minotar
+      console.log(`🔍 Buscando skin para usuario offline: ${username}`);
+      const skinUrl = await getSkinUrl(username, null, false);
+      console.log(`✅ Skin encontrada: ${skinUrl}`);
 
-    login({
-      username,
-      uuid: null,
-      skinUrl: `https://minotar.net/skin/${username}`
-    }, false);
+      login({
+        username,
+        uuid: null,
+        skinUrl: skinUrl
+      }, false);
 
-    navigate('/home');
+      navigate('/home');
+    } catch (error) {
+      console.error('❌ Error al obtener skin:', error);
+      // Fallback: usar Minotar si falla todo
+      login({
+        username,
+        uuid: null,
+        skinUrl: `https://minotar.net/skin/${username}`
+      }, false);
+      navigate('/home');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePremiumLogin = async () => {
@@ -41,27 +57,35 @@ const Login = () => {
     setError('');
 
     try {
-      // Autenticación con Microsoft usando Redirect Flow
-      const result = await microsoftAuth.loginWithRedirect((codeInfo) => {
+      console.log('🔐 Iniciando Device Code Flow...');
+      
+      // Autenticación con Device Code (como TLauncher)
+      const result = await microsoftAuth.loginWithDeviceCode((codeInfo) => {
         // Mostrar el código al usuario
+        console.log('📱 Código recibido:', codeInfo.userCode);
         setDeviceCode(codeInfo);
         setShowMsftCode(true);
         
         // Abrir navegador automáticamente
-        window.open(codeInfo.verificationUri, '_blank');
+        if (codeInfo.verificationUriComplete) {
+          window.open(codeInfo.verificationUriComplete, '_blank');
+        } else {
+          window.open(codeInfo.verificationUri, '_blank');
+        }
         
         if (toast) {
-          toast.info(`Código: ${codeInfo.userCode} - Abre tu navegador`, 8000);
+          toast.info(`Código: ${codeInfo.userCode} - Pégalo en el navegador`, 10000);
         }
       });
-
-      // Login exitoso
-      console.log('✅ Login Microsoft completo:', result);
+      
+      // Si llega aquí, el login fue exitoso
+      console.log('✅ Login Microsoft/Xbox Live completo:', result);
       
       login({
         username: result.username,
         uuid: result.uuid,
-        skinUrl: result.skinUrl
+        skinUrl: result.skinUrl,
+        accessToken: result.accessToken
       }, true);
 
       if (toast) {
@@ -72,12 +96,27 @@ const Login = () => {
       navigate('/home');
 
     } catch (err) {
-      console.error('Error en Microsoft login:', err);
-      setError(err.message || 'Error al iniciar sesión con Microsoft');
+      console.error('❌ Error en Microsoft login:', err);
+      
       setShowMsftCode(false);
       
+      // Mostrar error específico
+      let errorMsg = err.message;
+      
+      if (errorMsg.includes('Minecraft')) {
+        errorMsg = '❌ No tienes Minecraft en esta cuenta\n\nNecesitas Minecraft comprado.\nUsa modo Offline si no tienes Premium.';
+      } else if (errorMsg.includes('Xbox')) {
+        errorMsg = '❌ Error de Xbox Live\n\nCrea un perfil en xbox.com primero\no usa modo Offline.';
+      } else if (errorMsg.includes('rechazó') || errorMsg.includes('declined')) {
+        errorMsg = '❌ Autenticación cancelada';
+      } else if (errorMsg.includes('expiró') || errorMsg.includes('expired')) {
+        errorMsg = '❌ Código expirado\n\nIntenta de nuevo.';
+      }
+      
+      setError(errorMsg);
+      
       if (toast) {
-        toast.error(err.message || 'Error de autenticación');
+        toast.error('Error de autenticación');
       }
     } finally {
       setLoading(false);
@@ -85,7 +124,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-8 relative z-10">
+    <div className="w-full h-full flex items-center justify-center p-8 relative z-10 overflow-y-auto scrollbar-custom">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -168,7 +207,7 @@ const Login = () => {
               </div>
               <h2 className="text-white font-bold text-2xl mb-2">Cuenta Premium</h2>
               <p className="text-gray-400 text-sm">
-                Inicia sesión con Microsoft
+                Inicia sesión con Microsoft/Xbox Live
               </p>
             </div>
 
@@ -180,6 +219,12 @@ const Login = () => {
               >
                 {loading ? 'Conectando...' : '👑 Login con Microsoft'}
               </button>
+              
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                  <p className="text-red-400 text-xs text-center">{error}</p>
+                </div>
+              )}
             </div>
 
             <div className="mt-6 space-y-2 text-sm">
@@ -199,7 +244,7 @@ const Login = () => {
 
             <div className="mt-6 p-3 bg-pokemon-yellow/10 border border-pokemon-yellow/30 rounded-lg">
               <p className="text-pokemon-yellow text-xs text-center">
-                Requiere cuenta de Minecraft comprada
+                Requiere Minecraft comprado + Azure configurado
               </p>
             </div>
           </motion.div>
@@ -269,27 +314,41 @@ const Login = () => {
                 </button>
               </div>
 
+              <div className="bg-pokemon-darkest rounded-xl p-4">
+                <p className="text-gray-400 text-xs mb-2">3. Autoriza PokeReport Launcher</p>
+                <p className="text-white text-sm">
+                  Haz clic en "Sí" o "Permitir" en la página que se abrió
+                </p>
+              </div>
+
               <div className="bg-pokemon-yellow/10 border border-pokemon-yellow/30 rounded-xl p-4">
                 <p className="text-pokemon-yellow text-xs text-center">
-                  ⏰ Expira en {Math.floor(deviceCode.expiresIn / 60)} minutos
+                  ⏰ El código expira en {Math.floor(deviceCode.expiresIn / 60)} minutos
                 </p>
               </div>
 
               <div className="text-center">
                 <div className="loading-spinner mx-auto mb-3"></div>
                 <p className="text-white font-semibold text-sm">
-                  Esperando autorización...
+                  ⏳ Esperando tu autorización...
                 </p>
-                <p className="text-gray-500 text-xs mt-1">
-                  Autoriza en tu navegador para continuar
+                <p className="text-gray-500 text-xs mt-2">
+                  Una vez autorices en el navegador,
+                  <br />
+                  el launcher continuará automáticamente
                 </p>
               </div>
             </div>
 
             <button
               onClick={() => {
+                // Cancelar polling
+                if (microsoftAuth.cancel) {
+                  microsoftAuth.cancel();
+                }
                 setShowMsftCode(false);
                 setLoading(false);
+                setError('');
               }}
               className="w-full mt-6 py-3 bg-pokemon-darkest hover:bg-pokemon-darker text-white font-bold rounded-xl transition-colors"
             >

@@ -9,21 +9,16 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "electron:dev": "vite",
-    "electron:build": "vite build && electron-builder",
-    "start": "vite"
+    "start": "vite",
+    "start:python": "cd backend && python app.py",
+    "start:full": "npm run build && npm run start:python"
   },
   "dependencies": {
     "@azure/msal-browser": "^4.25.1",
-    "@azure/msal-node": "^3.8.0",
     "@react-three/drei": "^9.92.0",
     "@react-three/fiber": "^8.15.12",
     "axios": "^1.6.2",
-    "discord-rpc": "^4.0.1",
-    "electron-updater": "^6.1.7",
     "framer-motion": "^10.16.16",
-    "minecraft-launcher-core": "^3.18.2",
-    "minecraft-server-util": "^5.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
@@ -33,67 +28,11 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.10.2",
-    "@electron-forge/maker-squirrel": "^7.10.2",
-    "@electron-forge/maker-zip": "^7.10.2",
     "@vitejs/plugin-react": "^5.1.0",
     "autoprefixer": "^10.4.16",
-    "concurrently": "^8.2.2",
-    "electron": "^28.0.0",
-    "electron-builder": "^24.9.1",
-    "fs-extra": "^11.3.2",
-    "http-proxy-middleware": "^3.0.5",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",
-    "vite": "^7.1.12",
-    "vite-plugin-electron": "^0.29.0",
-    "vite-plugin-electron-renderer": "^0.14.6",
-    "wait-on": "^7.2.0"
-  },
-  "build": {
-    "appId": "com.pokereport.launcher",
-    "productName": "PokeReport Launcher",
-    "files": [
-      "dist/**/*",
-      "dist-electron/**/*",
-      "public/**/*"
-    ],
-    "directories": {
-      "output": "release",
-      "buildResources": "public"
-    },
-    "asar": false,
-    "extraMetadata": {
-      "main": "dist-electron/main.js"
-    },
-    "win": {
-      "target": "nsis",
-      "publisherName": "PokeReport Team"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "deleteAppDataOnUninstall": false
-    },
-    "electronDownload": {
-      "cache": "./cache"
-    },
-    "mac": {
-      "target": [
-        "dmg"
-      ],
-      "icon": "src/assets/icons/icon.icns",
-      "category": "public.app-category.games"
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "icon": "src/assets/icons/icon.png",
-      "category": "Game"
-    }
+    "vite": "^7.1.12"
   },
   "homepage": "./",
   "browserslist": {

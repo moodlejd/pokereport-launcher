@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
-import { FiChevronLeft, FiFolder } from 'react-icons/fi';
+import { FiChevronLeft } from 'react-icons/fi';
 
 const Config = () => {
   const navigate = useNavigate();
@@ -10,17 +10,9 @@ const Config = () => {
   const [localConfig, setLocalConfig] = useState(config);
 
   const handleSave = () => {
-    updateConfig(localConfig);
+    const { minecraftDir, ...configToPersist } = localConfig;
+    updateConfig(configToPersist);
     navigate('/home');
-  };
-
-  const handleSelectDirectory = async () => {
-    if (window.electronAPI) {
-      const dir = await window.electronAPI.selectDirectory();
-      if (dir) {
-        setLocalConfig({ ...localConfig, minecraftDir: dir });
-      }
-    }
   };
 
   return (
@@ -125,31 +117,22 @@ const Config = () => {
             </div>
           </motion.div>
 
-          {/* Directorio de Minecraft */}
+          {/* Directorio del juego */}
           <motion.div
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.25 }}
             className="glass rounded-2xl p-6"
           >
-            <h2 className="text-white font-bold text-xl mb-4">
-              📁 Directorio de Minecraft
+            <h2 className="text-white font-bold text-xl mb-3">
+              📂 Carpeta del juego
             </h2>
-
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                value={localConfig.minecraftDir || 'Por defecto'}
-                readOnly
-                className="flex-1 px-4 py-3 bg-pokemon-darkest border-2 border-pokemon-blue/30 rounded-lg text-white"
-              />
-              <button
-                onClick={handleSelectDirectory}
-                className="w-12 h-12 bg-pokemon-blue rounded-lg flex items-center justify-center hover:bg-pokemon-blue/80 transition-colors"
-              >
-                <FiFolder className="text-white" size={20} />
-              </button>
-            </div>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              El launcher instala Minecraft, los mods y todos los recursos en
+              una carpeta dedicada ubicada en <span className="text-pokemon-blue font-semibold">%APPDATA%/.pokereport</span>.
+              Si ya existe, se reutiliza automáticamente para mantener tus datos
+              y evitar descargas innecesarias.
+            </p>
           </motion.div>
 
           {/* Botones */}

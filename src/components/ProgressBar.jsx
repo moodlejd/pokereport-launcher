@@ -1,42 +1,45 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { motion } from 'framer-motion';
 
-const ProgressBar = ({ progress, message, speed }) => {
+const ProgressBar = ({ progress = 0, message, speed = 0 }) => {
+  const clampedProgress = Math.max(0, Math.min(100, progress));
+  const formattedSpeed = useMemo(() => {
+    if (!speed || Number.isNaN(speed)) return null;
+    return `${speed.toFixed(2)} MB/s`;
+  }, [speed]);
+
   return (
-    <div className="w-full">
+    <div className="w-full space-y-3">
       {/* Mensaje de estado */}
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-white font-semibold text-sm">{message}</span>
-        <span className="text-pokemon-blue font-bold text-sm">{Math.round(progress)}%</span>
+      <div className="flex items-center justify-between">
+        <span className="text-white font-semibold text-sm md:text-base truncate">
+          {message}
+        </span>
+        <span className="text-pokemon-yellow font-bold text-sm md:text-base">
+          {Math.round(clampedProgress)}%
+        </span>
       </div>
 
       {/* Barra de progreso */}
-      <div className="w-full h-3 bg-pokemon-darkest rounded-full overflow-hidden border border-pokemon-blue/30">
-        <div
-          className="h-full bg-gradient-to-r from-pokemon-blue via-pokemon-yellow to-pokemon-blue bg-[length:200%_100%] animate-[gradient_2s_ease-in-out_infinite] transition-all duration-300 relative"
-          style={{ width: `${progress}%` }}
+      <div className="w-full h-4 md:h-5 bg-pokemon-darkest/80 rounded-xl overflow-hidden border border-pokemon-blue/40 backdrop-blur">
+        <motion.div
+          className="h-full relative"
+          initial={{ width: 0 }}
+          animate={{ width: `${clampedProgress}%` }}
+          transition={{ ease: 'easeInOut', duration: 0.2 }}
         >
-          {/* Efecto de brillo */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shine_1.5s_ease-in-out_infinite]"></div>
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-pokemon-blue via-pokemon-yellow/80 to-pokemon-red/80 opacity-90" />
+          <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.15)_0%,rgba(255,255,255,0)_40%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.25)_100%)] animate-[shine_1.4s_linear_infinite]" />
+        </motion.div>
       </div>
 
       {/* Info adicional */}
-      {speed && (
-        <div className="mt-2 text-gray-400 text-xs text-right">
-          {speed > 0 ? `${speed.toFixed(2)} MB/s` : 'Calculando...'}
-        </div>
-      )}
+      <div className="flex items-center justify-between text-xs text-gray-400">
+        <span>Preparando recursos...</span>
+        <span>{formattedSpeed || 'Calculando velocidad...'}</span>
+      </div>
 
-      <style jsx>{`
-        @keyframes gradient {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
+      <style>{`
         @keyframes shine {
           0% {
             transform: translateX(-100%);

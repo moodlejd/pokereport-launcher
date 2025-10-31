@@ -61,75 +61,100 @@
             text-align: center;
         }
 
+        .card {
+            position: relative;
+            z-index: 10;
+            width: 420px;
+            max-width: calc(100vw - 48px);
+            padding: 36px 42px 30px;
+            border-radius: 28px;
+            background: rgba(11, 15, 35, 0.88);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(75, 180, 233, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 26px;
+        }
+
         .logo {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #fdd835 0%, #d32f2f 100%);
-            border-radius: 50%;
+            width: 110px;
+            height: 110px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 64px;
-            margin: 0 auto 30px;
-            animation: pulse 2s ease-in-out infinite;
-            box-shadow: 0 10px 40px rgba(253, 216, 53, 0.4);
+            border-radius: 30px;
+            background: radial-gradient(circle at 30% 30%, #ffef9a, #ff9a45 60%, #f44336);
+            box-shadow: 0 15px 45px rgba(255, 152, 0, 0.35);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .logo img {
+            width: 64px;
+            height: 64px;
         }
 
         h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #d32f2f 0%, #fdd835 50%, #4bb4e9 100%);
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #ff5252, #ffc107, #40c4ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 6px;
         }
 
         p {
-            color: #4bb4e9;
-            font-size: 16px;
+            color: #9db9ff;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 30px;
         }
 
-        /* Spinner de carga */
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(75, 180, 233, 0.2);
-            border-top-color: #4bb4e9;
+        .spinner-ring {
+            width: 54px;
+            height: 54px;
+            position: relative;
+        }
+
+        .spinner-ring::before {
+            content: '';
+            position: absolute;
+            inset: 0;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            border: 4px solid rgba(64, 196, 255, 0.15);
+        }
+
+        .spinner-ring::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: #40c4ff;
+            animation: spin 0.9s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Texto de carga */
         .loading-text {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-top: 20px;
+            color: #7f91c7;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
             animation: fade 1.5s ease-in-out infinite;
         }
 
         @keyframes fade {
-            0%, 100% { opacity: 0.5; }
+            0%, 100% { opacity: 0.4; }
             50% { opacity: 1; }
         }
 
-        /* Versión */
         .version {
-            position: absolute;
-            bottom: 20px;
-            color: #64748b;
+            margin-top: 12px;
+            color: rgba(148, 163, 196, 0.9);
             font-size: 12px;
+            letter-spacing: 1.2px;
         }
     </style>
 </head>
@@ -144,15 +169,18 @@
     </div>
 
     <!-- Contenido principal -->
-    <div class="content">
-        <div class="logo">⚡</div>
-        <h1>POKEREPORT</h1>
-        <p>LAUNCHER PROFESIONAL</p>
-        <div class="spinner"></div>
-        <div class="loading-text">Iniciando...</div>
+    <div class="card">
+        <div class="logo">
+            <img src="pokeball-icon.png" alt="Pokereport" />
+        </div>
+        <div class="content">
+            <h1>POKEREPORT</h1>
+            <p>LAUNCHER PROFESIONAL</p>
+        </div>
+        <div class="spinner-ring"></div>
+        <div class="loading-text">Inicializando componentes...</div>
+        <div class="version">v1.0.0 · Minecraft 1.21.1</div>
     </div>
-
-    <div class="version">v1.0.0 • Minecraft 1.21.1</div>
 </body>
 </html>
 

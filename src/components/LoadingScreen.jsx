@@ -50,7 +50,7 @@ const LoadingScreen = ({ onComplete }) => {
       transition={{ duration: 0.5 }}
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{
-        backgroundImage: `url(/background.png)`,
+        backgroundImage: `url(./background.png)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
@@ -60,7 +60,7 @@ const LoadingScreen = ({ onComplete }) => {
       <div className="absolute inset-0 bg-black/20" />
 
       {/* Contenido de carga */}
-      <div className="relative z-10 flex flex-col items-center justify-end h-full pb-32">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center h-full px-6 py-16 gap-12">
         {/* Logo animado (Pokeball) */}
         <motion.div
           animate={{
@@ -79,10 +79,10 @@ const LoadingScreen = ({ onComplete }) => {
               ease: 'linear'
             }
           }}
-          className="mb-12"
+          className="flex flex-col items-center gap-6"
         >
-            <img 
-              src="/pokeball-icon.png"
+          <img 
+            src="./pokeball-icon.png"
             alt="Loading"
             className="w-40 h-40 drop-shadow-2xl"
             style={{ 
@@ -90,6 +90,9 @@ const LoadingScreen = ({ onComplete }) => {
               imageRendering: 'auto'
             }}
           />
+          <h1 className="text-white text-2xl font-extrabold tracking-wide drop-shadow-lg">
+            POKEREPORT
+          </h1>
         </motion.div>
 
         {/* Mensaje de carga */}
@@ -97,7 +100,7 @@ const LoadingScreen = ({ onComplete }) => {
           key={currentMessage}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-white text-2xl font-bold mb-16 drop-shadow-lg"
+          className="text-white text-xl md:text-2xl font-semibold drop-shadow-lg max-w-2xl"
           style={{
             textShadow: '0 0 20px rgba(211, 47, 47, 0.8), 2px 2px 4px rgba(0,0,0,0.8)'
           }}
@@ -106,8 +109,8 @@ const LoadingScreen = ({ onComplete }) => {
         </motion.p>
 
         {/* Barra de progreso */}
-        <div className="w-[500px] mb-4">
-          <div className="w-full h-6 bg-black/60 backdrop-blur-sm rounded-full overflow-hidden border-4 border-white shadow-2xl">
+        <div className="w-full max-w-xl">
+          <div className="w-full h-5 md:h-6 bg-black/60 backdrop-blur-sm rounded-full overflow-hidden border border-white/40 shadow-xl">
             <motion.div
               className="h-full bg-gradient-to-r from-pokemon-red via-pokemon-yellow to-pokemon-red rounded-full relative"
               initial={{ width: '0%' }}
@@ -137,11 +140,11 @@ const LoadingScreen = ({ onComplete }) => {
 
           {/* Porcentaje */}
           <div className="flex items-center justify-between mt-3 px-1">
-            <span className="text-white text-lg font-bold drop-shadow-lg"
+            <span className="text-white text-sm md:text-lg font-bold drop-shadow-lg"
                   style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
               {progress}%
             </span>
-            <span className="text-pokemon-red text-lg font-bold drop-shadow-lg"
+            <span className="text-pokemon-red text-sm md:text-lg font-bold drop-shadow-lg"
                   style={{ textShadow: '0 0 10px rgba(211, 47, 47, 0.8), 2px 2px 4px rgba(0,0,0,0.8)' }}>
               {progress < 100 ? 'CARGANDO...' : '¡LISTO!'}
             </span>
@@ -153,7 +156,7 @@ const LoadingScreen = ({ onComplete }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="text-white text-sm mt-6 drop-shadow font-bold"
+          className="text-white text-xs md:text-sm mt-6 drop-shadow font-bold"
           style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}
         >
           v1.0.0 • Minecraft 1.21.1 Fabric

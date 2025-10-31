@@ -18,8 +18,7 @@ export const useStore = create(
         language: 'es',
         theme: 'pokemon',
         music: true,
-        discord: true,
-        minecraftDir: null
+        discord: true
       },
       
       // Estado del launcher
@@ -34,15 +33,26 @@ export const useStore = create(
        * Acciones de autenticación
        */
       login: (user, isPremium = false) => {
+        console.log('[Store] 💾 Login - Usuario:', user.username, 'isPremium:', isPremium);
+        
         set({
           isAuthenticated: true,
           user: {
             username: user.username,
             uuid: user.uuid || null,
             skinUrl: user.skinUrl || null,
-            isPremium
+            accessToken: user.accessToken || null,
+            clientToken: user.clientToken || null,
+            isPremium: isPremium  // IMPORTANTE: Guardar isPremium dentro del objeto user
           },
-          isPremium
+          isPremium: isPremium  // También en el root para compatibilidad
+        });
+        
+        console.log('[Store] ✅ Usuario guardado:', {
+          username: user.username,
+          isPremium: isPremium,
+          hasAccessToken: !!user.accessToken,
+          hasUuid: !!user.uuid
         });
       },
       

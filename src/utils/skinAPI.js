@@ -3,6 +3,23 @@
  * Maneja la obtención de skins tanto para cuentas Premium como No-Premium
  */
 
+import steveSkin from '@/assets/skins/steve.png';
+
+// Siempre usar proxy (sin Electron)
+const ENDPOINTS = {
+  tlauncherApi: '/tlauncher-api',
+  tlauncherAuth: '/tlauncher-auth'
+};
+
+const fetchJson = async (url) => {
+  // Usar fetch directo (sin Electron)
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
+};
+
 /**
  * URLs de servicios de skins
  */
@@ -39,23 +56,26 @@ const SKIN_SERVICES = {
     }
   ],
   
-  // No-Premium (por username)
+  // No-Premium (por username) - MEJORADO
   offline: [
     {
+      name: 'Minotar (Universal)',
+      url: (username) => `https://minotar.net/skin/${username}`,
+      timeout: 3000
+    },
+    {
       name: 'TLauncher Direct PNG',
-      url: (username) => `/tlauncher-api/catalog/nickname/download/tlauncher_${username}.png`,
+      url: (username) => `${ENDPOINTS.tlauncherApi}/catalog/nickname/download/tlauncher_${username}.png`,
       timeout: 5000
     },
     {
       name: 'TLauncher ElyBy API',
       url: async (username) => {
         try {
-          // Usar proxy local de React (setupProxy.js)
-          const apiUrl = `/tlauncher-auth/skin/profile/texture/login/${username}`;
+          const apiUrl = `${ENDPOINTS.tlauncherAuth}/skin/profile/texture/login/${username}`;
           console.log('🔍 TLauncher ElyBy API (via proxy):', apiUrl);
-          
-          const response = await fetch(apiUrl);
-          const data = await response.json();
+
+          const data = await fetchJson(apiUrl);
           
           console.log('📦 Respuesta TLauncher:', data);
           
@@ -63,10 +83,9 @@ const SKIN_SERVICES = {
             // Convertir la URL a usar el proxy también
             let skinUrl = data.SKIN.url;
             
-            // Si la URL es de auth.tlauncher.org, usar proxy
-            if (skinUrl.includes('auth.tlauncher.org')) {
-              skinUrl = skinUrl.replace('http://auth.tlauncher.org', '/tlauncher-auth');
-              skinUrl = skinUrl.replace('https://auth.tlauncher.org', '/tlauncher-auth');
+            if (!isElectron && skinUrl.includes('auth.tlauncher.org')) {
+              skinUrl = skinUrl.replace('http://auth.tlauncher.org', ENDPOINTS.tlauncherAuth);
+              skinUrl = skinUrl.replace('https://auth.tlauncher.org', ENDPOINTS.tlauncherAuth);
             }
             
             console.log('✅ TLauncher Skin (via proxy):', skinUrl);
@@ -84,33 +103,29 @@ const SKIN_SERVICES = {
       name: 'LittleSkin CustomSkinAPI',
       url: async (username) => {
         // LittleSkin usa CustomSkinAPI
-        if (window.electronAPI && window.electronAPI.fetchUrl) {
-          try {
-            const apiUrl = `https://littleskin.cn/csl/${username}.json`;
-            console.log('🔍 Consultando LittleSkin API:', apiUrl);
-            
-            const result = await window.electronAPI.fetchUrl(apiUrl);
-            
-            if (result.success && result.data) {
-              console.log('📦 Respuesta LittleSkin:', result.data);
-              
-              // Formato CustomSkinAPI: { "skin": "abc123.png", "skins": {...} }
-              if (result.data.skin) {
-                const skinUrl = `https://littleskin.cn/csl/textures/${result.data.skin}`;
-                console.log('✅ Skin URL de LittleSkin:', skinUrl);
-                return skinUrl;
-              }
-              
-              // Formato alternativo con "skins" object
-              if (result.data.skins && result.data.skins.default) {
-                const skinUrl = `https://littleskin.cn/csl/textures/${result.data.skins.default}`;
-                console.log('✅ Skin URL de LittleSkin (skins):', skinUrl);
-                return skinUrl;
-              }
+        try {
+          const apiUrl = `https://littleskin.cn/csl/${username}.json`;
+          console.log('🔍 Consultando LittleSkin API:', apiUrl);
+
+          const data = await fetchJson(apiUrl);
+
+          if (data) {
+            console.log('📦 Respuesta LittleSkin:', data);
+
+            if (data.skin) {
+              const skinUrl = `https://littleskin.cn/csl/textures/${data.skin}`;
+              console.log('✅ Skin URL de LittleSkin:', skinUrl);
+              return skinUrl;
             }
-          } catch (e) {
-            console.log('❌ LittleSkin API error:', e);
+
+            if (data.skins && data.skins.default) {
+              const skinUrl = `https://littleskin.cn/csl/textures/${data.skins.default}`;
+              console.log('✅ Skin URL de LittleSkin (skins):', skinUrl);
+              return skinUrl;
+            }
           }
+        } catch (e) {
+          console.log('❌ LittleSkin API error:', e);
         }
         throw new Error('API no disponible');
       },
@@ -139,7 +154,7 @@ const SKIN_SERVICES = {
   ],
   
   // Fallback final
-  fallback: '/assets/skins/steve.png'
+  fallback: steveSkin
 };
 
 /**
@@ -201,24 +216,16 @@ export const getSkinUrl = async (username, uuid = null, isPremium = false) => {
 
       // Verificar que la URL responde
       // Usar proxy de Electron si está disponible, sino fetch normal
-      let isValid = false;
-      
-      if (window.electronAPI && window.electronAPI.fetchUrl && url.includes('auth.tlauncher')) {
-        // Para TLauncher, ya tenemos la URL validada del proxy
-        isValid = true;
-      } else {
-        // Para otros servicios, verificar con fetch
+      let isValid = true;
+
+      if (!isElectron) {
         try {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-          const response = await fetch(url, { 
-            signal: controller.signal,
-            mode: 'no-cors' // Cambiar a no-cors para evitar CORS
-          });
-
+          const response = await fetch(url, { signal: controller.signal, mode: 'no-cors' });
           clearTimeout(timeoutId);
-          isValid = true; // Si no da error, asumimos que es válida
+          isValid = Boolean(response);
         } catch (fetchError) {
           console.log(`⚠️ Fetch falló para ${service.name}:`, fetchError.message);
           isValid = false;
@@ -265,6 +272,15 @@ export const getUUIDFromUsername = async (username) => {
  */
 export const downloadSkin = async (url, username) => {
   try {
+    if (isElectron && window.electronAPI?.fetchImageAsBase64 && url.startsWith('http')) {
+      const result = await window.electronAPI.fetchImageAsBase64(url);
+      if (result.success && result.dataUrl) {
+        console.log(`✅ Skin descargada via Electron para ${username}`);
+        return result.dataUrl;
+      }
+      console.warn('⚠️ No se pudo descargar via Electron, intentando fetch estándar...');
+    }
+
     const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to download');
     

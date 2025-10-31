@@ -5,6 +5,9 @@
 
 import { PublicClientApplication, InteractionRequiredAuthError } from '@azure/msal-browser';
 
+// Sin Electron, usar directo
+const MICROSOFT_OAUTH_BASE = 'https://login.microsoftonline.com/consumers/oauth2/v2.0';
+
 // Configuración de Azure AD
 // IMPORTANTE: Necesitas registrar tu app en https://portal.azure.com
 const MSAL_CONFIG = {
@@ -68,7 +71,7 @@ class MicrosoftAuthService {
       console.log('🔐 Iniciando Device Code Flow...');
 
       // 1. Obtener código de dispositivo (usando proxy en desarrollo)
-      const deviceCodeUrl = `/microsoft-oauth/consumers/oauth2/v2.0/devicecode`;
+      const deviceCodeUrl = `${MICROSOFT_OAUTH_BASE}/devicecode`;
       
       const params = new URLSearchParams({
         client_id: MSAL_CONFIG.auth.clientId,
@@ -99,13 +102,14 @@ class MicrosoftAuthService {
         onCodeReceived({
           userCode: codeData.user_code,
           verificationUri: codeData.verification_uri,
+          verificationUriComplete: codeData.verification_uri_complete,
           message: codeData.message,
           expiresIn: codeData.expires_in
         });
       }
 
       // 3. Polling para obtener el token (usando proxy en desarrollo)
-      const tokenUrl = `/microsoft-oauth/consumers/oauth2/v2.0/token`;
+      const tokenUrl = `${MICROSOFT_OAUTH_BASE}/token`;
       const pollInterval = (codeData.interval || 5) * 1000; // ms
       const expiresAt = Date.now() + (codeData.expires_in * 1000);
 

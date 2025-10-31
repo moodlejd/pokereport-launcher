@@ -1,34 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import electron from 'vite-plugin-electron';
-import renderer from 'vite-plugin-electron-renderer';
 import path from 'path';
 
 export default defineConfig({
   plugins: [
-    react(),
-    electron([
-      {
-        entry: 'electron/main.js',
-        vite: {
-          build: {
-            outDir: 'dist-electron'
-          }
-        }
-      },
-      {
-        entry: 'electron/preload.js',
-        onstart(options) {
-          options.reload();
-        },
-        vite: {
-          build: {
-            outDir: 'dist-electron'
-          }
-        }
-      }
-    ]),
-    renderer()
+    react()
   ],
   base: './',
   build: {
@@ -43,29 +19,16 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false
+      },
       '/tlauncher-api': {
         target: 'https://tlauncher.org',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/tlauncher-api/, '')
-      },
-      '/tlauncher-auth': {
-        target: 'https://auth.tlauncher.org',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/tlauncher-auth/, '')
-      },
-      '/littleskin-api': {
-        target: 'https://littleskin.cn',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/littleskin-api/, '')
-      },
-      '/microsoft-oauth': {
-        target: 'https://login.microsoftonline.com',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/microsoft-oauth/, '')
       }
     }
   },

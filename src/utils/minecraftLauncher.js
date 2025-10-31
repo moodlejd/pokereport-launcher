@@ -1,22 +1,81 @@
 /**
- * Utilidades para lanzar Minecraft con Fabric
- * Esta función se ejecutará en Electron (proceso principal)
- * En desarrollo (Chrome), solo simula el lanzamiento
+ * Utilidades para lanzar Minecraft con Python Backend
+ * Reemplaza completamente la lógica de Electron
  */
 
 export const launchMinecraft = async (user, config, onProgress) => {
+  console.log('🎮 Lanzando Minecraft via Python API...');
   
-  // Si estamos en Electron, usar IPC para lanzar desde el main process
-  if (window.electronAPI && window.electronAPI.launchMinecraft) {
-    console.log('🎮 Lanzando Minecraft via Electron...');
-    return await window.electronAPI.launchMinecraft(user, config);
+  try {
+    // Progreso manual (sin WebSocket por ahora)
+    if (onProgress) {
+      onProgress({ percent: 10, message: 'Conectando con Python backend...' });
+    }
+    
+    // Llamar API de Python para instalar/preparar
+    const response = await fetch('/api/launch-minecraft', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user, config }),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error(result.error || 'Error en instalación');
+    }
+    
+    if (onProgress) {
+      onProgress({ percent: 100, message: '✅ Instalación completada' });
+    }
+    
+    return result;
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+    throw error;
   }
+};
+
+export const startMinecraftGame = async (user, config) => {
+  console.log('🚀 Iniciando Minecraft via Python API...');
+  console.log('📨 Enviando datos:', { user, config });
   
-  // Si estamos en desarrollo (Chrome), simular el lanzamiento
-  console.log('⚠️ Modo desarrollo: Simulando lanzamiento de Minecraft...');
-  console.log('📝 En producción (.exe), esto lanzará Minecraft real');
-  
-  return await simulateLaunch(user, config, onProgress);
+  try {
+    const response = await fetch('/api/start-minecraft-game', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user, config }),
+    });
+    
+    console.log('📡 Respuesta HTTP:', response.status, response.statusText);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+    
+    const result = await response.json();
+    console.log('📨 Resultado:', result);
+    
+    if (!result.success) {
+      throw new Error(result.error || 'Error al lanzar Minecraft');
+    }
+    
+    return result;
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+    throw error;
+  }
 };
 
 /**
@@ -27,7 +86,7 @@ const simulateLaunch = async (user, config, onProgress) => {
     console.log('🎮 Iniciando sistema de lanzamiento de Minecraft...');
     
     // Obtener directorio de Minecraft
-    const minecraftDir = config.minecraftDir || await getDefaultMinecraftDir();
+    const minecraftDir = await getDefaultMinecraftDir();
     console.log('📁 Directorio:', minecraftDir);
     
     // Simulación de progreso

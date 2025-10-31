@@ -1,85 +1,104 @@
-# 🎮 PokeReport Launcher - Edición Profesional
+# 🎮 PokeReport Launcher - Python + React
 
-Launcher moderno y profesional para el servidor de Minecraft PokeReport, construido con **React**, **Electron** y **Three.js**.
+<div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![Minecraft](https://img.shields.io/badge/minecraft-1.21.1-green)
-![License](https://img.shields.io/badge/license-MIT-yellow)
+**Launcher profesional para el servidor de Minecraft PokeReport**
+
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green?style=for-the-badge&logo=minecraft)](https://minecraft.net)
+[![Fabric](https://img.shields.io/badge/Fabric-Incluido-blue?style=for-the-badge)](https://fabricmc.net)
+[![Python](https://img.shields.io/badge/Python-3.8+-yellow?style=for-the-badge&logo=python)](https://python.org)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
+
+</div>
 
 ---
 
 ## ✨ Características
 
-- 🎨 **UI Profesional** - Interfaz hermosa inspirada en Pokémon y Minecraft
-- 👤 **Render 3D** - Visualización 3D de tu skin con skinview3d
-- 🔐 **Dual Login** - Soporte para cuentas Premium (Microsoft) y Offline
-- 🎨 **Sistema de Skins** - Compatible con TLauncher y Mojang/Microsoft
-- 📰 **Panel de Noticias** - Noticias en tiempo real con modal expandible
-- ⚙️ **Configuración Avanzada** - RAM, Discord RPC
-- 🔍 **Buscador de Skins** - Valida skins de cualquier usuario
-- 💬 **Discord Rich Presence** - Muestra tu actividad en Discord
-- 🔄 **Auto-actualización** - Sistema integrado de actualizaciones
-- ✨ **Animaciones** - Transiciones suaves con Framer Motion
+- 🐍 **Backend Python** - Más estable que Electron
+- ⚛️ **Frontend React** - Interfaz moderna y hermosa
+- 🎨 **CustomSkinLoader** - Skins personalizadas + TLauncher
+- 🔐 **Microsoft Auth** - Device Code Flow (como TLauncher)
+- 🎮 **Auto-detección** - Username desde TLauncher automáticamente
+- 🔊 **Audio garantizado** - Todos los volúmenes al 100%
+- 🌍 **Idioma español** - Configurado automáticamente
+- 📦 **Modpack .mrpack** - Descarga e instalación automática
+- 📤 **Subir skins** - Sistema integrado para skins personalizadas
 
 ---
 
-## 🚀 Instalación (SÚPER FÁCIL)
+## 🚀 Instalación Rápida
 
-### **Descarga el Instalador Automático** ⭐ UN SOLO ARCHIVO
+### **Requisitos:**
+- Python 3.8+ ([Descargar](https://python.org/downloads))
+- Node.js 16+ ([Descargar](https://nodejs.org))
+- Java 17+ ([Descargar](https://adoptium.net))
 
-1. **Descarga**: [`PokeReport-Launcher-Installer.bat`](https://github.com/moodlejd/pokereport-launcher/raw/main/PokeReport-Launcher-Installer.bat)
-2. **Ejecuta** el archivo
-3. El instalador hace TODO automáticamente:
-   - ✅ Descarga el launcher desde GitHub
-   - ✅ Instala Node.js (si no lo tienes)
-   - ✅ Instala Git (si no lo tienes)
-   - ✅ Instala dependencias
-   - ✅ Crea acceso directo en escritorio
-   - ✅ ¡Listo para jugar!
-
-**Tiempo:** 5-10 minutos (solo primera vez)
-
-**Siguientes veces:**
-- Doble click en: **`PokeReport Launcher`** (escritorio) ⚡
-
----
-
-### **O Instalación Manual:**
+### **Instalar y Ejecutar:**
 
 ```bash
-# Clonar repositorio
+# 1. Clonar repositorio
 git clone https://github.com/moodlejd/pokereport-launcher.git
 cd pokereport-launcher
 
-# Instalar dependencias
-npm install
+# 2. Ejecutar launcher
+iniciar_simple.bat
+```
 
-# Iniciar launcher
-npm start
+**¡Eso es todo!** Se abrirá automáticamente en `http://localhost:8000`
+
+---
+
+## 🎯 ¿Cómo Funciona?
+
+### **Flujo:**
+```
+React Frontend → Python Backend → minecraft-launcher-lib → Minecraft
+```
+
+### **Primer inicio:**
+1. Ejecuta `iniciar_simple.bat`
+2. Instala dependencias Python (solo 2)
+3. Compila React
+4. Inicia servidor en `http://localhost:8000`
+5. **¡Listo para jugar!**
+
+### **Siguientes veces:**
+```bash
+iniciar_simple.bat
 ```
 
 ---
 
-## 🎯 Uso
+## 🎨 Sistema de Skins
 
-### Login
-- **🎮 Modo Offline**: Ingresa tu username y juega inmediatamente
-- **👑 Cuenta Premium**: Inicia sesión con Microsoft (requiere Minecraft comprado)
+### **Prioridades para No-Premium:**
+1. **TLauncher Auth API** - Tu skin de TLauncher
+2. **CustomSkinLoader Local** - Skins subidas
+3. **Otras APIs** - Crafatar, MC-Heads, etc.
 
-### Visor 3D
-- Renderiza tu personaje en 3D con tu skin
-- Busca skins de cualquier usuario (Premium/Offline toggle)
-- Limpia caché con el botón 🗑️
+### **Subir Skin Personalizada:**
+1. Click en **📤** en el visor 3D
+2. Selecciona tu `.png` de skin
+3. Se guarda en `CustomSkinLoader/LocalSkin/skins/`
+4. **¡Listo!** Se usa en Minecraft y en el visor
 
-### Panel de Noticias
-- Click en cualquier noticia para ver detalles
-- Auto-actualización cada 5 minutos
-- Links a Discord integrados
+---
 
-### Configuración
-- Ajusta RAM asignada (2-16 GB)
-- Activa/desactiva Discord RPC
-- Selecciona directorio personalizado de Minecraft
+## 🔐 Microsoft Authentication
+
+### **Device Code Flow:**
+1. Click en **"👑 Login con Microsoft"**
+2. Se muestra código (ej: `AB12-CD34`)
+3. Se abre microsoft.com/devicelogin
+4. Pega el código y autoriza
+5. **¡Listo!** Login automático
+
+### **Requisitos:**
+- ✅ Minecraft comprado en cuenta Microsoft
+- ✅ Azure configurado (ver `AZURE_SETUP_DETALLADO.md`)
+
+**O usa modo Offline** - funciona igual de bien.
 
 ---
 
@@ -87,149 +106,121 @@ npm start
 
 ```
 pokereport-launcher/
-├── app/                    # Electron (main process)
-│   ├── main.js            # Proceso principal
-│   └── preload.js         # Preload script
-├── src/                    # React app
-│   ├── components/        # Componentes UI
-│   ├── pages/             # Páginas
-│   ├── store/             # Estado global (Zustand)
-│   ├── utils/             # Utilidades
-│   └── hooks/             # Custom hooks
-├── public/                 # Assets públicos
-├── scripts/                # Scripts de build
-├── package.json
+├── backend/                    # Python Backend
+│   ├── app_simple.py          # Servidor HTTP + APIs
+│   ├── requirements_simple.txt # Solo 2 dependencias
+│   ├── fix_fabric_json.py     # Arregla JSON de Fabric
+│   └── test_minecraft.py      # Diagnóstico
+├── src/                       # React Frontend
+│   ├── components/            # Componentes UI
+│   │   ├── SkinViewerFixed.jsx
+│   │   ├── NewsPanel.jsx
+│   │   └── ...
+│   ├── pages/                 # Páginas
+│   │   ├── Login.jsx
+│   │   ├── Home.jsx
+│   │   ├── Launcher.jsx
+│   │   └── Config.jsx
+│   └── utils/                 # Utilidades
+│       ├── skinAPIFixed.js
+│       ├── microsoftAuthDevice.js
+│       ├── xboxLiveAuth.js
+│       └── minecraftLauncher.js
+├── public/                    # Assets
+│   ├── background.png
+│   ├── pokeball-icon.png
+│   └── auth-callback.html
+├── iniciar_simple.bat         # Ejecutor principal
+├── package.json               # Dependencias React (sin Electron)
 └── README.md
 ```
 
 ---
 
-## 🔧 Desarrollo
+## 🛠️ Desarrollo
+
+### **Modo desarrollo:**
 
 ```bash
-# Desarrollo (React + Electron)
-npm start
+# Terminal 1: React dev server
+npm run dev
 
-# Solo React
-npm run start:react
+# Terminal 2: Python backend
+cd backend
+python app_simple.py
+```
 
-# Solo Electron
-npm run start:electron
+**React**: `http://localhost:5173`
+**Python API**: `http://localhost:8000`
 
-# Build de producción
-npm run build
+---
 
-# Crear ejecutable
-npm run build:electron
+## 📦 Dependencias
+
+### **Python (2 dependencias):**
+```
+minecraft-launcher-lib==6.2
+requests==2.31.0
+```
+
+### **React:**
+```
+react, react-dom, react-router-dom
+framer-motion, skinview3d, three
+zustand, axios
 ```
 
 ---
 
-## 🎨 APIs de Skins Configuradas
+## 🎮 Servidor PokeReport
 
-### Para usuarios Offline (TLauncher):
-- **TLauncher Direct**: `tlauncher.org/catalog/nickname/download/`
-- **TLauncher ElyBy API**: `auth.tlauncher.org/skin/profile/texture/login/`
-- **LittleSkin**: `littleskin.cn/csl/`
-- **Minotar, MC-Heads, Visage** (fallbacks)
-
-### Para usuarios Premium:
-- **Crafatar**: Skins oficiales de Mojang por UUID
-- **MC-Heads**: Alternativa confiable
-- **Mojang API**: Fuente oficial directa
+**IP**: `199.127.60.252:25569`
+**Versión**: Minecraft 1.21.1 (Fabric)
+**Mods**: +120 (Cobblemon, estructuras, NPCs, etc.)
 
 ---
 
-## 🔐 Microsoft OAuth
+## 🔧 Solución de Problemas
 
-### Configuración:
-1. Registrar app en [Azure Portal](https://portal.azure.com)
-2. Client ID ya configurado: `15d53ab4-cfad-4757-88a2-904139d4ca9d`
-3. Permisos: `XboxLive.signin`
-4. ⚠️ **Nota**: Funciona en .exe, en desarrollo puede tener CORS
+### **Skin no carga:**
+1. Click en **📤** para subir skin personalizada
+2. O verifica que tengas skin en TLauncher
 
-Ver `INSTALL.md` para guía completa.
+### **Microsoft Auth falla:**
+1. Verifica Azure configurado
+2. O usa modo Offline
 
----
-
-## 💬 Discord Rich Presence
-
-Para habilitar:
-1. Crear app en [Discord Developers](https://discord.com/developers/applications)
-2. Copiar Application ID
-3. Actualizar `src/utils/discordRPC.js` línea 9
-4. Activar en Configuración del launcher
-
----
-
-## 🐛 Solución de Problemas
-
-### El launcher no inicia
-```bash
-rm -rf node_modules package-lock.json
-npm install
-npm start
-```
-
-### Skins no cargan
-- Para offline: Verificar username existe en TLauncher
-- Para premium: Verificar autenticación Microsoft
-- Limpiar caché con botón 🗑️ en el visor
-
-### CORS errors en desarrollo
-- Normal en modo desarrollo
-- Se resuelve automáticamente en producción (.exe)
-- Proxy configurado en `src/setupProxy.js`
-
----
-
-## 📦 Distribución
-
-### Crear ejecutable:
-```bash
-npm run build
-npm run build:electron
-```
-
-**Resultado**: `dist/PokeReport Launcher Setup 1.0.0.exe`
-
-⚠️ **Nota actual**: El .exe tiene problemas de compilación (trabajo en progreso).  
-✅ **Recomendado**: Usar `npm start` para desarrollo por ahora.
-
----
-
-## 🤝 Contribuir
-
-1. Fork el proyecto
-2. Crea tu rama (`git checkout -b feature/AmazingFeature`)
-3. Commit (`git commit -m 'Add AmazingFeature'`)
-4. Push (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+### **Minecraft no inicia:**
+1. Verifica Java instalado: `java -version`
+2. Ejecuta `backend/test_minecraft.py` para diagnóstico
 
 ---
 
 ## 📝 Licencia
 
-MIT License - Ver [LICENSE](LICENSE)
+MIT License - Ver [LICENSE](./LICENSE)
 
 ---
 
-## 🎮 Créditos
+## 👥 Créditos
 
-- **Servidor**: PokeReport - 199.127.60.252:25569
-- **Minecraft**: 1.21.1 Fabric + 120 mods
-- **Desarrollado con**: React, Electron, Three.js, skinview3d
-- **Comunidad**: PokeReport Team
-
----
-
-## 📞 Contacto
-
-- Discord: [discord.gg/pokereport](https://discord.gg/pokereport)
-- GitHub: [@moodlejd](https://github.com/moodlejd)
+- **Desarrollador**: Playanza
+- **Tecnologías**: Python, React, minecraft-launcher-lib, skinview3d
+- **Servidor**: PokeReport Team
 
 ---
 
-**🎉 ¡Atrapa, entrena y juega! ⚡**
+## 💬 Soporte
 
-*Launcher profesional nivel AAA para la mejor experiencia de PokeReport*
+- 💬 **Discord**: [https://discord.gg/njfPQMAhQV](https://discord.gg/njfPQMAhQV)
+- 🐛 **Issues**: [GitHub Issues](../../issues)
+
+---
+
+<div align="center">
+
+**Hecho con ❤️ para la comunidad de PokeReport**
+
+⭐ **¡Dale una estrella si te gusta!** ⭐
+
+</div>

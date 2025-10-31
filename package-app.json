@@ -1,8 +1,0 @@
-{
-  "name": "pokereport-launcher",
-  "version": "1.0.0",
-  "main": "electron/main.js",
-  "description": "PokeReport Launcher",
-  "author": "PokeReport Team"
-}
-

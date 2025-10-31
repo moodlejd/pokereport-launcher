@@ -1,0 +1,4 @@
+minecraft-launcher-lib==6.2
+requests==2.31.0
+
+# Versión estable de minecraft-launcher-lib que funciona

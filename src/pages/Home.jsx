@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { motion } from 'framer-motion';
-import SkinViewer from '../components/SkinViewer';
+import SkinViewer from '../components/SkinViewerFixed';
 import NewsPanel from '../components/NewsPanel';
 import { FiPlay, FiSettings, FiLogOut } from 'react-icons/fi';
 
@@ -43,8 +43,10 @@ const Home = () => {
   const navigate = useNavigate();
   const { user, isPremium, logout, config } = useStore();
   const [skinKey, setSkinKey] = React.useState(0);
+  const [isCheckingLanguage, setIsCheckingLanguage] = React.useState(false);
 
   const handleLaunch = () => {
+    // Ir a /launcher para descargar/verificar/instalar archivos
     navigate('/launcher');
   };
 
@@ -63,9 +65,28 @@ const Home = () => {
     setSkinKey(prev => prev + 1);
   };
 
+  // Sin listeners de Electron (ya no necesarios)
+  useEffect(() => {
+    // Python backend maneja automáticamente idioma y audio
+    console.log('✅ Python backend configurará idioma español y audio automáticamente');
+  }, []);
+
+  const handleVerifyLanguage = async () => {
+    if (isCheckingLanguage) return;
+    
+    setIsCheckingLanguage(true);
+    try {
+      console.log('🌐 Python backend configura idioma automáticamente...');
+      // Python backend ya maneja esto automáticamente
+      alert('✅ El Python backend configura idioma español y audio automáticamente.\n\nNo necesitas hacer nada manualmente.');
+    } finally {
+      setIsCheckingLanguage(false);
+    }
+  };
+
   return (
-    <div className="w-full h-full p-6 overflow-hidden relative z-10">
-      <div className="h-full flex flex-col">
+    <div className="w-full h-full p-6 overflow-y-auto relative z-10 scrollbar-custom">
+      <div className="min-h-full flex flex-col">
         {/* Header */}
         <motion.div
           initial={{ y: -50, opacity: 0 }}
@@ -74,7 +95,7 @@ const Home = () => {
         >
           <div className="flex items-center gap-4">
             <img 
-              src="/pokeball-icon.png"
+              src="./pokeball-icon.png"
               alt="Pokeball"
               className="w-12 h-12 drop-shadow-lg"
               style={{ filter: 'drop-shadow(0 0 10px rgba(211, 47, 47, 0.6))' }}
@@ -90,6 +111,14 @@ const Home = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={handleVerifyLanguage}
+              disabled={isCheckingLanguage}
+              className="w-12 h-12 glass rounded-xl flex items-center justify-center hover:border-green-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Verificar idioma español"
+            >
+              <span className="text-white text-xl">{isCheckingLanguage ? '⏳' : '🌐'}</span>
+            </button>
             <button
               onClick={handleRefreshSkin}
               className="w-12 h-12 glass rounded-xl flex items-center justify-center hover:border-pokemon-yellow transition-all"
@@ -173,11 +202,13 @@ const Home = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleLaunch}
-              className="w-full bg-gradient-to-r from-pokemon-blue to-pokemon-blue/80 text-white font-bold text-2xl py-5 rounded-2xl flex items-center justify-center gap-4 hover:shadow-2xl hover:shadow-pokemon-blue/50 transition-all group relative overflow-hidden"
+              className="w-full bg-gradient-to-r from-pokemon-blue to-pokemon-blue/80 text-white font-bold text-xl py-5 rounded-2xl flex items-center justify-center gap-4 hover:shadow-2xl hover:shadow-pokemon-blue/50 transition-all group relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-              <FiPlay size={28} />
-              <span className="relative z-10">JUGAR POKEREPORT</span>
+              <FiPlay size={28} className="flex-shrink-0" />
+              <span className="relative z-10 text-center leading-tight">
+                DESCARGAR O ACTUALIZAR<br className="sm:hidden" /> ARCHIVOS NECESARIOS
+              </span>
             </motion.button>
 
             <div className="mt-2 text-center text-gray-400 text-sm">
@@ -187,12 +218,12 @@ const Home = () => {
 
           {/* Columna derecha - Noticias */}
           <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="col-span-12 lg:col-span-4"
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="col-span-12 lg:col-span-4 flex flex-col h-full"
           >
-            <div className="glass rounded-2xl p-6 h-full overflow-hidden">
+            <div className="glass rounded-2xl p-6 h-full flex flex-col overflow-hidden">
               <NewsPanel />
             </div>
           </motion.div>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Autenticación Microsoft - PokeReport</title>
+  <style>
+    body { 
+      font-family: 'Poppins', Arial, sans-serif; 
+      text-align: center; 
+      padding: 50px;
+      background: linear-gradient(135deg, #4bb4e9, #fdd835);
+      color: white;
+      margin: 0;
+    }
+    .container { 
+      background: rgba(0,0,0,0.8); 
+      padding: 30px; 
+      border-radius: 15px; 
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .logo {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #fdd835, #d32f2f);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 30px;
+    }
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">⚡</div>
+    <h2>🎮 PokeReport Launcher</h2>
+    <p>Procesando autenticación Microsoft...</p>
+    <div class="spinner"></div>
+    <div id="status">⏳ Espera un momento...</div>
+  </div>
+  
+  <script>
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const error = urlParams.get('error');
+      const errorDescription = urlParams.get('error_description');
+      
+      const statusDiv = document.getElementById('status');
+      
+      if (error) {
+        statusDiv.innerHTML = `❌ Error: ${errorDescription || error}`;
+        statusDiv.style.color = '#ff6b6b';
+        
+        // Enviar error al padre
+        if (window.opener) {
+          window.opener.postMessage({ 
+            type: 'auth-error',
+            error: errorDescription || error 
+          }, '*');
+        }
+        
+        setTimeout(() => {
+          window.close();
+        }, 3000);
+        
+      } else if (code) {
+        statusDiv.innerHTML = '✅ Código recibido, procesando...';
+        statusDiv.style.color = '#51cf66';
+        
+        // Enviar código al padre
+        if (window.opener) {
+          window.opener.postMessage({ 
+            type: 'auth-success',
+            code: code 
+          }, '*');
+        }
+        
+        setTimeout(() => {
+          statusDiv.innerHTML = '✅ ¡Listo! Cerrando ventana...';
+          window.close();
+        }, 2000);
+        
+      } else {
+        statusDiv.innerHTML = '❌ No se recibió código de autorización';
+        statusDiv.style.color = '#ff6b6b';
+        
+        if (window.opener) {
+          window.opener.postMessage({ 
+            type: 'auth-error',
+            error: 'No authorization code received' 
+          }, '*');
+        }
+        
+        setTimeout(() => {
+          window.close();
+        }, 3000);
+      }
+      
+    } catch (err) {
+      document.getElementById('status').innerHTML = '❌ Error procesando respuesta: ' + err.message;
+      console.error('Callback error:', err);
+      
+      if (window.opener) {
+        window.opener.postMessage({ 
+          type: 'auth-error',
+          error: err.message 
+        }, '*');
+      }
+      
+      setTimeout(() => {
+        window.close();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

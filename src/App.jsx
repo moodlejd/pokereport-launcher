@@ -1,7 +1,7 @@
-import React, { useState, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useStore } from './store/useStore';
-import TitleBar from './components/TitleBar';
+// import TitleBar from './components/TitleBar'; // No necesario sin Electron
 import LoadingScreen from './components/LoadingScreen';
 import { ToastContainer } from './components/Toast';
 import { useToast } from './hooks/useToast';
@@ -17,13 +17,51 @@ const Config = lazy(() => import('./pages/Config'));
 export const ToastContext = React.createContext(null);
 
 function App() {
-  const { isAuthenticated } = useStore();
+  const { isAuthenticated, login } = useStore();
   const [isLoading, setIsLoading] = useState(true);
   const toast = useToast();
+
+  // Siempre usar BrowserRouter (sin Electron)
+  const Router = BrowserRouter;
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
   };
+
+  // Auto-detectar usuario al iniciar
+  useEffect(() => {
+    const autoDetectUser = async () => {
+      if (!isAuthenticated) {
+        try {
+          // Intentar detectar usuario desde TLauncher
+          const response = await fetch('/api/legacy-accounts');
+          const data = await response.json();
+          
+          if (data.accounts && data.accounts.length > 0) {
+            const account = data.accounts[0];
+            console.log('🔍 Usuario detectado automáticamente:', account.username);
+            
+            // Auto-login con usuario detectado
+            login({
+              username: account.username,
+              uuid: null,
+              skinUrl: null
+            }, false);
+            
+            if (toast) {
+              toast.success(`👋 ¡Hola ${account.username}! Detectado automáticamente`);
+            }
+          }
+        } catch (error) {
+          console.log('No se pudo detectar usuario automáticamente');
+        }
+      }
+      
+      setIsLoading(false);
+    };
+
+    setTimeout(autoDetectUser, 1000);
+  }, []);
 
   // Si está cargando, mostrar LoadingScreen
   if (isLoading) {
@@ -37,14 +75,13 @@ function App() {
           {/* Toast notifications */}
           <ToastContainer toasts={toast.toasts} removeToast={toast.removeToast} />
           
-          {/* Barra de título personalizada */}
-          <TitleBar />
+          {/* Sin barra de título (no hay Electron) */}
           
           {/* Efectos de fondo animados */}
           <BackgroundEffects />
 
           {/* Contenido principal */}
-          <div className="h-[calc(100vh-32px)] overflow-hidden">
+          <div className="h-full overflow-auto scrollbar-custom">
             <Suspense fallback={
               <div className="w-full h-full flex items-center justify-center">
                 <div className="loading-spinner"></div>
